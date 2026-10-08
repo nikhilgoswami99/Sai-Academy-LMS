@@ -2,6 +2,7 @@ import { Users, UserRound, Layers, BookOpen } from "lucide-react";
 
 import { PageHeader } from "../../../components/dashboard/pageHeader";
 import { StatCard } from "../../../components/dashboard/statCard";
+import { QuickActions } from "../../../components/dashboard/quickActions";
 
 export default function AdminDashboard() {
   return (
@@ -40,6 +41,7 @@ export default function AdminDashboard() {
           description="Current classes"
         />
       </div>
+      <QuickActions></QuickActions>
     </div>
   );
 }
