@@ -1,3 +1,7 @@
+"use client";
+
+import { MoreHorizontal } from "lucide-react";
+
 import {
   Table,
   TableBody,
@@ -6,6 +10,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+import { Button } from "@/components/ui/button";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const students = [
   {
@@ -42,15 +56,14 @@ export function StudentTable() {
             <TableHead>Class</TableHead>
             <TableHead>Batch</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead className="w-12" />
           </TableRow>
         </TableHeader>
 
         <TableBody>
           {students.map((student) => (
             <TableRow key={student.id}>
-              <TableCell className="font-medium">
-                {student.name}
-              </TableCell>
+              <TableCell className="font-medium">{student.name}</TableCell>
 
               <TableCell>{student.id}</TableCell>
 
@@ -59,6 +72,34 @@ export function StudentTable() {
               <TableCell>{student.batch}</TableCell>
 
               <TableCell>{student.status}</TableCell>
+
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={`Actions for ${student.name}`}
+                      />
+                    }
+                  >
+                    <MoreHorizontal aria-hidden="true" />
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>View Student</DropdownMenuItem>
+
+                    <DropdownMenuItem>Edit Student</DropdownMenuItem>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem className="text-destructive">
+                      Delete Student
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

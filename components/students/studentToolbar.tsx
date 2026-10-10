@@ -1,9 +1,7 @@
 "use client";
 
-import { Plus } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CreateStudentDialog } from "@/components/students/createStudentDialog";
 
 export function StudentToolbar() {
   return (
@@ -13,10 +11,7 @@ export function StudentToolbar() {
         className="sm:max-w-sm"
       />
 
-      <Button>
-        <Plus />
-        Add Student
-      </Button>
+      <CreateStudentDialog />
     </div>
   );
 }
