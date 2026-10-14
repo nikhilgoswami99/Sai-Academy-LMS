@@ -25,19 +25,17 @@ export function ViewStudentDialog({
   onOpenChange,
   student,
 }: ViewStudentDialogProps) {
-  if (!student) return null;
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{student.name}</DialogTitle>
+          <DialogTitle>{student ? student.name : "Student details"}</DialogTitle>
           <DialogDescription>
-            Student details
+            {student ? "Student details" : "No student selected."}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        {student && <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <p className="text-sm text-muted-foreground">
               Student ID
@@ -65,7 +63,7 @@ export function ViewStudentDialog({
             </p>
             <p className="font-medium">{student.status}</p>
           </div>
-        </div>
+        </div>}
       </DialogContent>
     </Dialog>
   );

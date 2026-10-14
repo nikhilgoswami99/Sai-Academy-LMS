@@ -1,4 +1,5 @@
 import { PageHeader } from "@/components/dashboard/pageHeader";
+import { CreateTeacherDialog } from "@/components/teachers/createTeacherDialog";
 import { TeacherTable } from "@/components/teachers/teacherTable";
 
 export default function TeachersPage() {
@@ -7,6 +8,7 @@ export default function TeachersPage() {
       <PageHeader
         title="Teachers"
         description="Manage teachers at SAI Academy"
+        action={<CreateTeacherDialog />}
       />
 
       <TeacherTable />
