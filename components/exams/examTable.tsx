@@ -1,3 +1,23 @@
+"use client";
+
+import { MoreHorizontal } from "lucide-react";
+import { useState } from "react";
+
+import { PageHeader } from "@/components/dashboard/pageHeader";
+import { CreateExamDialog } from "@/components/exams/createExamDialog";
+import { DeleteExamDialog } from "@/components/exams/deleteExamDialog";
+import { EditExamDialog } from "@/components/exams/editExamDialog";
+import type { Exam } from "@/components/exams/examTypes";
+import { formatExamDate } from "@/components/exams/examTypes";
+import { ViewExamDialog } from "@/components/exams/viewExamDialog";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -7,7 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const exams = [
+const initialExams: Exam[] = [
   {
     id: "EXM001",
     name: "Monthly Test - September",
@@ -35,35 +55,131 @@ const exams = [
 ];
 
 export function ExamTable() {
-  return (
-    <div className="rounded-xl border bg-card">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Exam</TableHead>
-            <TableHead>Exam ID</TableHead>
-            <TableHead>Class</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Total Marks</TableHead>
-            <TableHead>Status</TableHead>
-          </TableRow>
-        </TableHeader>
+  const [exams, setExams] = useState<Exam[]>(initialExams);
+  const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
+  const [viewOpen, setViewOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
-        <TableBody>
-          {exams.map((exam) => (
-            <TableRow key={exam.id}>
-              <TableCell className="font-medium">
-                {exam.name}
-              </TableCell>
-              <TableCell>{exam.id}</TableCell>
-              <TableCell>{exam.className}</TableCell>
-              <TableCell>{exam.date}</TableCell>
-              <TableCell>{exam.totalMarks}</TableCell>
-              <TableCell>{exam.status}</TableCell>
+  const handleCreateExam = (exam: Exam) => {
+    setExams((currentExams) => [...currentExams, exam]);
+  };
+
+  const handleSaveExam = (updatedExam: Exam) => {
+    setExams((currentExams) =>
+      currentExams.map((exam) => (exam.id === updatedExam.id ? updatedExam : exam))
+    );
+    setSelectedExam(updatedExam);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!selectedExam) return;
+
+    setExams((currentExams) =>
+      currentExams.filter((exam) => exam.id !== selectedExam.id)
+    );
+    setDeleteOpen(false);
+    setSelectedExam(null);
+  };
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="Exams"
+        description="Manage academy exams and assessments"
+        action={<CreateExamDialog onCreate={handleCreateExam} />}
+      />
+
+      <div className="rounded-xl border bg-card">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Exam</TableHead>
+              <TableHead>Exam ID</TableHead>
+              <TableHead>Class</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Total Marks</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="w-12">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+
+          <TableBody>
+            {exams.map((exam) => (
+              <TableRow key={exam.id}>
+                <TableCell className="font-medium">{exam.name}</TableCell>
+                <TableCell>{exam.id}</TableCell>
+                <TableCell>{exam.className}</TableCell>
+                <TableCell>{formatExamDate(exam.date)}</TableCell>
+                <TableCell>{exam.totalMarks}</TableCell>
+                <TableCell>{exam.status}</TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      render={
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          aria-label={`Actions for ${exam.name}`}
+                        />
+                      }
+                    >
+                      <MoreHorizontal aria-hidden="true" />
+                    </DropdownMenuTrigger>
+
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setSelectedExam(exam);
+                          setViewOpen(true);
+                        }}
+                      >
+                        View Exam
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setSelectedExam(exam);
+                          setEditOpen(true);
+                        }}
+                      >
+                        Edit Exam
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="text-destructive"
+                        onClick={() => {
+                          setSelectedExam(exam);
+                          setDeleteOpen(true);
+                        }}
+                      >
+                        Delete Exam
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+
+        <ViewExamDialog
+          open={viewOpen}
+          onOpenChange={setViewOpen}
+          exam={selectedExam}
+        />
+        <EditExamDialog
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          exam={selectedExam}
+          onSave={handleSaveExam}
+        />
+        <DeleteExamDialog
+          open={deleteOpen}
+          onOpenChange={setDeleteOpen}
+          exam={selectedExam}
+          onConfirm={handleConfirmDelete}
+        />
+      </div>
     </div>
   );
 }

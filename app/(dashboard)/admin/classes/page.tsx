@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/dashboard/pageHeader";
 import { ClassTable } from "@/components/classes/classTable";
+import { CreateClassDialog } from "@/components/classes/createClassDialog";
 
 export default function ClassesPage() {
   return (
@@ -7,6 +8,7 @@ export default function ClassesPage() {
       <PageHeader
         title="Classes"
         description="Manage academic classes at SAI Academy"
+        action={<CreateClassDialog />}
       />
 
       <ClassTable />

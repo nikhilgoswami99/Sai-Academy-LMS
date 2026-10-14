@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { Plus } from "lucide-react";
 
+import type { Exam } from "@/components/exams/examTypes";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,9 +22,32 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export function CreateExamDialog() {
+interface CreateExamDialogProps {
+  onCreate: (exam: Exam) => void;
+}
+
+export function CreateExamDialog({ onCreate }: CreateExamDialogProps) {
+  const [open, setOpen] = useState(false);
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [className, setClassName] = useState("");
+  const [date, setDate] = useState("");
+  const [totalMarks, setTotalMarks] = useState("");
+  const [status, setStatus] = useState<Exam["status"]>("Upcoming");
+
+  const handleCreate = () => {
+    onCreate({ id, name, className, date, totalMarks: Number(totalMarks), status });
+    setOpen(false);
+    setId("");
+    setName("");
+    setClassName("");
+    setDate("");
+    setTotalMarks("");
+    setStatus("Upcoming");
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger render={<Button />}>
         <Plus aria-hidden="true" />
         Create Exam
@@ -36,18 +61,35 @@ export function CreateExamDialog() {
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Exam Name</label>
-            <Input placeholder="e.g. Monthly Test - October" />
+            <label className="text-sm font-medium" htmlFor="create-exam-name">
+              Exam Name
+            </label>
+            <Input
+              id="create-exam-name"
+              placeholder="e.g. Monthly Test - October"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium" htmlFor="create-exam-id">
+              Exam ID
+            </label>
+            <Input
+              id="create-exam-id"
+              placeholder="EXM004"
+              value={id}
+              onChange={(event) => setId(event.target.value)}
+            />
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Class</label>
-
-            <Select>
+            <Select value={className} onValueChange={(value) => value && setClassName(value)}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select class" />
               </SelectTrigger>
-
               <SelectContent>
                 <SelectItem value="XI">Class XI</SelectItem>
                 <SelectItem value="XII">Class XII</SelectItem>
@@ -59,15 +101,46 @@ export function CreateExamDialog() {
             <label className="text-sm font-medium" htmlFor="exam-date">
               Exam Date
             </label>
-            <Input className="w-full min-w-0" id="exam-date" type="date" />
+            <Input
+              className="w-full min-w-0"
+              id="exam-date"
+              type="date"
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
+            />
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">Total Marks</label>
-            <Input type="number" placeholder="70" min="1" />
+            <label className="text-sm font-medium" htmlFor="exam-total-marks">
+              Total Marks
+            </label>
+            <Input
+              id="exam-total-marks"
+              type="number"
+              placeholder="70"
+              value={totalMarks}
+              onChange={(event) => setTotalMarks(event.target.value)}
+            />
           </div>
 
-          <Button className="w-full">Create Exam</Button>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Status</label>
+            <Select value={status} onValueChange={(value) => {
+              if (value === "Upcoming" || value === "Completed") setStatus(value);
+            }}>
+              <SelectTrigger className="w-full" aria-label="Status">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Upcoming">Upcoming</SelectItem>
+                <SelectItem value="Completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Button className="w-full" onClick={handleCreate}>
+            Create Exam
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
