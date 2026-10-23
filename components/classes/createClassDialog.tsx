@@ -1,6 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
+import { BrandText } from "@/components/brandText";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -32,7 +33,7 @@ export function CreateClassDialog() {
         <DialogHeader>
           <DialogTitle>Create Class</DialogTitle>
           <DialogDescription>
-            Add a new academic class to SAI Academy.
+            <BrandText text="Add a new academic class to SAI Academy." />
           </DialogDescription>
         </DialogHeader>
 

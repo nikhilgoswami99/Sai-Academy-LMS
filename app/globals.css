@@ -3,6 +3,211 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@utility brand-wordmark {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.landing-page {
+  --landing-paper: #f8f5ef;
+  --landing-ink: #24211e;
+  --landing-rust: #a64e2d;
+  scroll-behavior: smooth;
+}
+
+.landing-hero {
+  background:
+    radial-gradient(ellipse at 82% 42%, rgb(198 154 92 / 12%), transparent 35%),
+    var(--landing-paper);
+}
+
+.landing-hero-grain {
+  background-image: radial-gradient(rgb(58 45 33 / 14%) 0.65px, transparent 0.65px);
+  background-size: 9px 9px;
+  mask-image: linear-gradient(to bottom, black, transparent 88%);
+  opacity: 0.22;
+}
+
+.landing-enter {
+  animation: landing-rise-in 700ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.landing-visual {
+  animation: landing-rise-in 850ms 120ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.landing-workspace {
+  background: linear-gradient(118deg, #edddc8 0%, #f0ece4 46%, #e9e5da 100%);
+}
+
+.landing-workspace-panel {
+  animation: landing-rise-in 260ms ease-out both;
+}
+
+.landing-italic {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.055em;
+}
+
+.landing-button {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: 999px;
+  padding: 0 21px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.landing-button:hover {
+  transform: translateY(-2px);
+}
+
+.landing-button:focus-visible,
+.landing-text-link:focus-visible,
+.landing-footer-link:focus-visible {
+  outline: 2px solid #a64e2d;
+  outline-offset: 4px;
+}
+
+.landing-button-accent {
+  background: #a64e2d;
+  color: #fff8ee;
+  box-shadow: 0 8px 20px -12px rgb(112 50 29 / 75%);
+}
+
+.landing-button-accent:hover {
+  background: #873c22;
+  box-shadow: 0 12px 24px -12px rgb(112 50 29 / 65%);
+}
+
+.landing-button-dark {
+  min-height: 42px;
+  background: #302e29;
+  color: #fffaf2;
+}
+
+.landing-button-dark:hover {
+  background: #a64e2d;
+}
+
+.landing-button-light {
+  background: #fff8ee;
+  color: #75402b;
+}
+
+.landing-button-light:hover {
+  background: #f3e5d4;
+}
+
+.landing-text-link {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 10px;
+  color: #514a42;
+  font-size: 13px;
+  font-weight: 600;
+  transition: color 180ms ease, gap 180ms ease;
+}
+
+.landing-text-link:hover {
+  gap: 13px;
+  color: #a64e2d;
+}
+
+.landing-nav-link,
+.landing-footer-link {
+  text-decoration: none;
+  text-underline-offset: 5px;
+  transition: color 180ms ease, text-decoration-color 180ms ease;
+}
+
+.landing-nav-link:hover,
+.landing-footer-link:hover {
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+}
+
+.landing-kicker {
+  color: #a64e2d;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.landing-kicker-light {
+  color: #e5ad77;
+}
+
+.landing-orbit {
+  position: absolute;
+  z-index: 0;
+  border: 1px solid rgb(166 78 45 / 14%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.landing-orbit-one {
+  inset: -9% -8% -7% 2%;
+  transform: rotate(-14deg);
+}
+
+.landing-orbit-two {
+  inset: 2% -12% -9% 10%;
+  border-color: rgb(166 78 45 / 10%);
+  transform: rotate(11deg);
+}
+
+.landing-note {
+  animation: landing-note-in 700ms 500ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.landing-feature-row {
+  transition: padding-left 180ms ease, background-color 180ms ease;
+}
+
+.landing-feature-row:hover {
+  padding-left: 8px;
+}
+
+.landing-scroll-cue svg {
+  animation: landing-nudge 1.8s ease-in-out infinite;
+}
+
+@keyframes landing-rise-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes landing-note-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes landing-nudge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-page,
+  .landing-page *,
+  .landing-page *::before,
+  .landing-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

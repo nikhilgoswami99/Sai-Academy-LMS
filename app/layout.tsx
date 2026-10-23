@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SAI ACADEMY",
   description:
-    "Student Management System and Learning Management System for SAI Academy",
+    "Student Management System and Learning Management System for SAI ACADEMY",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

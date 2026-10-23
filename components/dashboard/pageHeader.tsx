@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { BrandText } from "@/components/brandText";
 
 interface PageHeaderProps {
   title: string;
@@ -20,7 +21,7 @@ export function PageHeader({
 
         {description && (
           <p className="mt-1 text-sm text-muted-foreground">
-            {description}
+            <BrandText text={description} />
           </p>
         )}
       </div>

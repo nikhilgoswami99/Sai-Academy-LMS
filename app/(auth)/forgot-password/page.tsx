@@ -32,7 +32,7 @@ export default function ForgotPasswordPage() {
   return (
     <section className="flex flex-1 flex-col items-center justify-center px-5 py-12 sm:px-8">
       <Link href="/" className="mb-8 text-lg font-bold tracking-wide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-4">
-        SAI Academy
+        <span className="brand-wordmark">SAI ACADEMY</span>
       </Link>
       <div className="w-full max-w-md rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-9">
         {submitted ? (
@@ -78,7 +78,7 @@ export default function ForgotPasswordPage() {
           </>
         )}
       </div>
-      <p className="mt-8 text-center text-xs text-neutral-500">SAI Academy</p>
+      <p className="mt-8 text-center text-xs text-neutral-500"><span className="brand-wordmark">SAI ACADEMY</span></p>
     </section>
   );
 }

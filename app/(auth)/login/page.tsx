@@ -5,6 +5,10 @@ import Link from "next/link";
 import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { signInWithEmailAndPassword } from "@/lib/auth/login";
+import { getCurrentUser } from "@/lib/auth/get-current-user";
+import { signOut } from "@/lib/auth/logout";
+import { useRouter } from "next/navigation";
 
 type LoginErrors = { email?: string; password?: string };
 
@@ -13,6 +17,7 @@ function validateEmail(email: string) {
 }
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -20,38 +25,65 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [notice, setNotice] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (loading) return;
     const nextErrors: LoginErrors = {};
     if (!email.trim()) nextErrors.email = "Enter your email address.";
-    else if (!validateEmail(email.trim())) nextErrors.email = "Enter a valid email address.";
+    else if (!validateEmail(email.trim()))
+      nextErrors.email = "Enter a valid email address.";
     if (!password) nextErrors.password = "Enter your password.";
     setErrors(nextErrors);
     setNotice("");
     if (Object.keys(nextErrors).length) return;
 
-    // Keep this interface frontend-only until an authentication service is connected.
     setLoading(true);
-    window.setTimeout(() => {
+    try {
+      const result = await signInWithEmailAndPassword(email.trim(), password);
+      if (!result.success) {
+        setNotice(result.message);
+        return;
+      }
+
+      const currentUser = await getCurrentUser();
+      if (!currentUser.authenticated || !currentUser.authorized) {
+        await signOut();
+        setNotice("This account does not have access to the Academic Incharge dashboard.");
+        return;
+      }
+
+      router.replace("/admin");
+      router.refresh();
+    } catch {
+      setNotice("We could not complete sign-in. Please try again.");
+    } finally {
       setLoading(false);
-      setNotice("Sign-in is not available yet. Please contact your academy administrator.");
-    }, 500);
+    }
   }
 
   return (
     <section className="flex flex-1 flex-col items-center justify-center px-5 py-12 sm:px-8">
-      <Link href="/" className="mb-8 text-lg font-bold tracking-wide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-4">
-        SAI Academy
+      <Link
+        href="/"
+        className="mb-8 text-lg font-bold tracking-wide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-4"
+      >
+        <span className="brand-wordmark">SAI ACADEMY</span>
       </Link>
       <div className="w-full max-w-md rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-9">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
-          <p className="mt-2 text-sm leading-6 text-neutral-600">Sign in to continue to your academy account.</p>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Welcome back
+          </h1>
+          <p className="mt-2 text-sm leading-6 text-neutral-600">
+            Sign in to continue to your academy account.
+          </p>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit} noValidate>
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">Email address</label>
+            <label htmlFor="email" className="text-sm font-medium">
+              Email address
+            </label>
             <Input
               id="email"
               name="email"
@@ -59,18 +91,31 @@ export default function LoginPage() {
               autoComplete="email"
               placeholder="you@example.com"
               value={email}
-              onChange={(event) => { setEmail(event.target.value); setErrors((current) => ({ ...current, email: undefined })); setNotice(""); }}
+              onChange={(event) => {
+                setEmail(event.target.value);
+                setErrors((current) => ({ ...current, email: undefined }));
+                setNotice("");
+              }}
               aria-invalid={Boolean(errors.email)}
               aria-describedby={errors.email ? "email-error" : undefined}
-              className="h-11 rounded-lg px-3"
+              className="h-[35px] rounded-lg px-2"
             />
-            {errors.email && <p id="email-error" className="text-sm text-red-700" role="alert">{errors.email}</p>}
+            {errors.email && (
+              <p id="email-error" className="text-sm text-red-700" role="alert">
+                {errors.email}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-3">
-              <label htmlFor="password" className="text-sm font-medium">Password</label>
-              <Link href="/forgot-password" className="text-sm font-medium text-neutral-700 underline-offset-4 hover:text-neutral-950 hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900">
+              <label htmlFor="password" className="text-sm font-medium">
+                Password
+              </label>
+              <Link
+                href="/forgot-password"
+                className="text-sm font-medium text-neutral-700 underline-offset-4 hover:text-neutral-950 hover:underline focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900"
+              >
                 Forgot password?
               </Link>
             </div>
@@ -82,10 +127,16 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 placeholder="Enter your password"
                 value={password}
-                onChange={(event) => { setPassword(event.target.value); setErrors((current) => ({ ...current, password: undefined })); setNotice(""); }}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  setErrors((current) => ({ ...current, password: undefined }));
+                  setNotice("");
+                }}
                 aria-invalid={Boolean(errors.password)}
-                aria-describedby={errors.password ? "password-error" : undefined}
-                className="h-11 rounded-lg px-3 pr-11"
+                aria-describedby={
+                  errors.password ? "password-error" : undefined
+                }
+                className="h-[35px] rounded-lg px-2 pr-11"
               />
               <button
                 type="button"
@@ -94,21 +145,51 @@ export default function LoginPage() {
                 aria-pressed={showPassword}
                 className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-lg text-neutral-500 transition hover:text-neutral-950 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-neutral-900"
               >
-                {showPassword ? <EyeOff aria-hidden="true" className="size-4" /> : <Eye aria-hidden="true" className="size-4" />}
+                {showPassword ? (
+                  <EyeOff aria-hidden="true" className="size-4" />
+                ) : (
+                  <Eye aria-hidden="true" className="size-4" />
+                )}
               </button>
             </div>
-            {errors.password && <p id="password-error" className="text-sm text-red-700" role="alert">{errors.password}</p>}
+            {errors.password && (
+              <p
+                id="password-error"
+                className="text-sm text-red-700"
+                role="alert"
+              >
+                {errors.password}
+              </p>
+            )}
           </div>
 
-          {notice && <p className="rounded-lg border border-neutral-200 bg-neutral-50 p-3 text-sm leading-5 text-neutral-700" role="status">{notice}</p>}
+          {notice && (
+            <p
+              className="rounded-lg border border-neutral-200 bg-neutral-50 p-3 text-sm leading-5 text-neutral-700"
+              role="status"
+            >
+              {notice}
+            </p>
+          )}
 
-          <Button type="submit" disabled={loading} className="h-11 w-full rounded-lg text-sm font-semibold">
-            {loading && <LoaderCircle aria-hidden="true" className="size-4 animate-spin" />}
+          <Button
+            type="submit"
+            disabled={loading}
+            className="h-[35px] w-full rounded-lg px-2 text-sm font-semibold"
+          >
+            {loading && (
+              <LoaderCircle
+                aria-hidden="true"
+                className="size-4 animate-spin"
+              />
+            )}
             {loading ? "Signing in…" : "Sign in"}
           </Button>
         </form>
       </div>
-      <p className="mt-8 text-center text-xs text-neutral-500">Learn with purpose. Grow with confidence.</p>
+      <p className="mt-8 text-center text-xs text-neutral-500">
+        Learn with purpose. Grow with confidence.
+      </p>
     </section>
   );
 }
