@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   Sidebar,
@@ -20,27 +21,39 @@ const role: UserRole = "admin";
 const items = navigation[role];
 
 export function AppSidebar() {
+  const pathname = usePathname();
+
   return (
     <Sidebar>
-      <SidebarHeader>
-        <div className="px-2 py-2">
-          <h1 className="brand-wordmark text-lg font-semibold">SAI ACADEMY</h1>
-          <p className="text-xs text-sidebar-foreground/60">
-            Management System
-          </p>
+      <SidebarHeader className="border-b border-sidebar-border px-3 py-4">
+        <div className="flex items-center gap-3 px-1 py-1">
+          <span aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">SA</span>
+          <div className="min-w-0">
+            <h1 className="brand-wordmark text-base font-semibold tracking-tight text-sidebar-primary">SAI ACADEMY</h1>
+            <p className="text-xs text-sidebar-foreground/60">
+              Management System
+            </p>
+          </div>
         </div>
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Management</SidebarGroupLabel>
+        <SidebarGroup className="px-3 py-5">
+          <SidebarGroupLabel className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-wider">
+            Management
+          </SidebarGroupLabel>
 
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton render={<Link href={item.url} />}>
-                    <item.icon />
+                  <SidebarMenuButton
+                    isActive={pathname === item.url || pathname.startsWith(`${item.url}/`)}
+                    size="lg"
+                    className="my-0.5 rounded-lg px-3"
+                    render={<Link href={item.url} aria-current={pathname === item.url ? "page" : undefined} />}
+                  >
+                    <item.icon className="text-sidebar-primary" />
                     <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

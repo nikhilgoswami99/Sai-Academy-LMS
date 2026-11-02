@@ -29,7 +29,7 @@ export function AppHeader() {
         return;
       }
 
-      router.replace("/login");
+      router.replace("/");
       router.refresh();
     } catch {
       setLogoutError("We could not sign you out. Please try again.");

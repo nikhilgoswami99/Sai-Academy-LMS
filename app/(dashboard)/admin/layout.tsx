@@ -13,8 +13,8 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
   await connection();
   const currentUser = await getCurrentUser();
 
-  if (!currentUser.authenticated) redirect("/login");
-  if (!currentUser.authorized) redirect("/login");
+  if (!currentUser.authenticated) redirect("/");
+  if (!currentUser.authorized) redirect("/");
 
   return <AppShell>{children}</AppShell>;
 }
