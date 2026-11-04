@@ -24,7 +24,7 @@ export default function AdmissionsPage() {
           ))}
         </ol>
         <div className="mt-10 flex flex-col gap-5 rounded-2xl bg-primary p-7 text-primary-foreground sm:flex-row sm:items-center sm:justify-between sm:p-9">
-          <div><p className="text-xs font-semibold uppercase tracking-[0.15em] text-white/70">Questions about joining?</p><h2 className="mt-2 text-xl font-semibold">Start with a conversation.</h2></div>
+          <div><p className="text-xs font-semibold uppercase tracking-[0.15em] text-primary-foreground/70">Questions about joining?</p><h2 className="mt-2 text-xl font-semibold">Start with a conversation.</h2></div>
           <Link href="/contact" className="inline-flex w-fit items-center gap-2 rounded-lg bg-card px-4 py-2.5 text-sm font-semibold text-primary transition hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white">Visit contact page <ArrowRight aria-hidden="true" size={16} /></Link>
         </div>
       </PageContainer>

@@ -79,10 +79,10 @@ export function AcademicWorkspace() {
               id="workspace-title"
               className="mt-6 max-w-md text-4xl font-medium leading-[1.05] tracking-[-0.05em] sm:text-5xl"
             >
-              One academic story, <span className="landing-italic text-[var(--brand-blue)]">many chapters.</span>
+              One academic story, <span className="landing-italic text-brand-blue">many chapters.</span>
             </h2>
           </div>
-          <p className="max-w-lg text-sm leading-7 text-[var(--muted-foreground)] md:pb-1">
+          <p className="max-w-lg text-sm leading-7 text-muted-foreground md:pb-1">
             Explore an illustrative view of the academic areas SAI ACADEMY is designed to bring together. Select a chapter to see how the information can connect.
           </p>
         </div>
@@ -93,18 +93,18 @@ export function AcademicWorkspace() {
               <div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--brand-blue)]">Academic workspace</p>
-                    <p className="mt-1 text-xs text-[var(--muted-foreground)]">An illustrative product view</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-blue">Academic workspace</p>
+                    <p className="mt-1 text-xs text-muted-foreground">An illustrative product view</p>
                   </div>
-                  <span className="brand-wordmark text-[11px] font-bold tracking-wide text-[var(--foreground)]">SAI ACADEMY</span>
+                  <span className="brand-wordmark text-[11px] font-bold tracking-wide text-foreground">SAI ACADEMY</span>
                 </div>
                 <div className="mt-8 flex items-start gap-4">
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-[var(--secondary)] text-[var(--brand-blue)]">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-secondary text-brand-blue">
                     <ActiveIcon aria-hidden="true" size={19} strokeWidth={1.6} />
                   </span>
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.14em] text-[var(--muted-foreground)]">Selected area</p>
-                    <p className="mt-1 text-xl font-medium tracking-[-0.04em] text-[var(--primary)]">{activeView.label}</p>
+                    <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Selected area</p>
+                    <p className="mt-1 text-xl font-medium tracking-[-0.04em] text-foreground">{activeView.label}</p>
                   </div>
                 </div>
                 <div className="mt-8 flex flex-wrap gap-2" aria-label="Choose an academic area">
@@ -114,14 +114,14 @@ export function AcademicWorkspace() {
                       type="button"
                       aria-pressed={activeView.id === view.id}
                       onClick={() => setActiveView(view)}
-                      className={`rounded-full border px-3 py-2 text-[11px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-blue)] focus-visible:ring-offset-2 ${activeView.id === view.id ? "border-[var(--primary)] bg-[var(--primary)] text-white" : "border-[var(--border)]/15 bg-transparent text-[var(--muted-foreground)] hover:border-[var(--brand-blue)]/50 hover:text-[var(--brand-blue)]"}`}
+                      className={`rounded-full border px-3 py-2 text-[11px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 ${activeView.id === view.id ? "border-primary bg-primary text-primary-foreground" : "border-border/15 bg-transparent text-muted-foreground hover:border-brand-blue/50 hover:text-brand-blue"}`}
                     >
                       {view.label}
                     </button>
                   ))}
                 </div>
               </div>
-              <div className="mt-8 border-t border-[var(--border)]/10 pt-4 text-[10px] leading-5 text-[var(--muted-foreground)]">
+              <div className="mt-8 border-t border-border/10 pt-4 text-[10px] leading-5 text-muted-foreground">
                 Sample content only. This preview contains no real student or academy records.
               </div>
             </div>
@@ -130,28 +130,28 @@ export function AcademicWorkspace() {
               <div key={activeView.id} className="landing-workspace-panel h-full">
                 <div className="flex flex-col justify-between gap-3 border-b border-[var(--border)]/10 pb-6 sm:flex-row sm:items-end">
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--brand-blue)]">Inside the academy</p>
-                    <h3 className="mt-2 text-2xl font-medium tracking-[-0.045em] text-[var(--primary)] sm:text-3xl">{activeView.title}</h3>
-                    <p className="mt-2 text-xs leading-5 text-[var(--muted-foreground)]">{activeView.description}</p>
+                    <p className="text-[10px] uppercase tracking-[0.16em] text-brand-blue">Inside the academy</p>
+                    <h3 className="mt-2 text-2xl font-medium tracking-[-0.045em] text-foreground sm:text-3xl">{activeView.title}</h3>
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">{activeView.description}</p>
                   </div>
-                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[var(--muted)] px-3 py-1.5 text-[10px] text-[var(--muted-foreground)]">
+                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-[10px] text-muted-foreground">
                     <GraduationCap aria-hidden="true" size={13} /> Academic overview
                   </span>
                 </div>
 
                 <div className="mt-5">
-                  <div className="hidden grid-cols-[1fr_1.15fr_auto] gap-4 px-3 pb-2 text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--muted-foreground)] sm:grid">
+                  <div className="hidden grid-cols-[1fr_1.15fr_auto] gap-4 px-3 pb-2 text-[9px] font-semibold uppercase tracking-[0.14em] text-muted-foreground sm:grid">
                     <span>Area</span><span>Academic context</span><span>View</span>
                   </div>
                   <ul className="divide-y divide-[var(--border)]/10">
                     {activeView.rows.map(([title, detail, state], index) => (
                       <li key={title} className="grid gap-2 py-4 sm:grid-cols-[1fr_1.15fr_auto] sm:items-center sm:gap-4 sm:px-3">
-                        <span className="flex items-center gap-3 text-xs font-medium text-[var(--foreground)]">
-                          <span className={`flex size-7 items-center justify-center rounded-full text-[9px] ${index === 0 ? "bg-[var(--secondary)] text-[var(--brand-blue)]" : "bg-[var(--muted)] text-[var(--muted-foreground)]"}`}>0{index + 1}</span>
+                        <span className="flex items-center gap-3 text-xs font-medium text-foreground">
+                          <span className={`flex size-7 items-center justify-center rounded-full text-[9px] ${index === 0 ? "bg-secondary text-brand-blue" : "bg-muted text-muted-foreground"}`}>0{index + 1}</span>
                           {title}
                         </span>
-                        <span className="pl-10 text-[11px] text-[var(--muted-foreground)] sm:pl-0">{detail}</span>
-                        <span className="inline-flex w-fit items-center gap-1.5 pl-10 text-[10px] text-[var(--brand-green)] sm:pl-0">
+                        <span className="pl-10 text-[11px] text-muted-foreground sm:pl-0">{detail}</span>
+                        <span className="inline-flex w-fit items-center gap-1.5 pl-10 text-[10px] text-brand-green sm:pl-0">
                           <span className="size-1.5 rounded-full bg-[var(--brand-green)]" /> {state}
                         </span>
                       </li>
@@ -160,8 +160,8 @@ export function AcademicWorkspace() {
                 </div>
 
                 <div className="mt-5 flex items-center justify-between rounded-xl bg-[var(--muted)] px-4 py-3">
-                  <span className="text-[10px] text-[var(--muted-foreground)]">A connected view of academic life</span>
-                  <ArrowUpRight aria-hidden="true" size={15} className="text-[var(--brand-blue)]" />
+                  <span className="text-[10px] text-muted-foreground">A connected view of academic life</span>
+                  <ArrowUpRight aria-hidden="true" size={15} className="text-brand-blue" />
                 </div>
               </div>
             </div>

@@ -9,10 +9,8 @@ import { AuthDialog } from "@/components/auth/auth-dialog";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
   { href: "/courses", label: "Courses" },
   { href: "/teachers", label: "Teachers" },
-  { href: "/results", label: "Results" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -86,14 +84,14 @@ export function SiteNav() {
           <div className="ml-auto hidden shrink-0 items-center gap-2 lg:flex">
           <AuthDialog
             trigger={
-              <button type="button" className="rounded-full px-4 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <button type="button" className="rounded-md px-4 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 Login
               </button>
             }
           />
           <Link
             href="/admissions"
-            className="inline-flex items-center gap-2 rounded-full bg-brand-red px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-red/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-2 rounded-md bg-brand-red px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-red/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2"
           >
             Enquire Now <ArrowUpRight aria-hidden="true" size={15} />
           </Link>
@@ -105,7 +103,7 @@ export function SiteNav() {
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
           onClick={() => setMenuOpen((open) => !open)}
-          className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-border/80 bg-card/75 text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
+          className="inline-flex size-10 shrink-0 items-center justify-center rounded-md border border-border/80 bg-card/75 text-foreground transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
           >
           {menuOpen ? <X aria-hidden="true" size={19} /> : <Menu aria-hidden="true" size={19} />}
           </button>
@@ -143,7 +141,7 @@ export function SiteNav() {
           <div className="mt-2 grid grid-cols-2 gap-2 border-t border-border pt-3">
             <AuthDialog
               trigger={
-                <button type="button" onClick={closeMenu} className="min-h-11 rounded-full border border-border bg-card px-4 text-sm font-semibold text-foreground transition hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <button type="button" onClick={closeMenu} className="min-h-11 rounded-md border border-border bg-card px-4 text-sm font-semibold text-foreground transition hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                   Login
                 </button>
               }
@@ -151,7 +149,7 @@ export function SiteNav() {
             <Link
               href="/admissions"
               onClick={closeMenu}
-              className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full bg-brand-red px-3 text-sm font-semibold text-white transition hover:bg-brand-red/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2"
+              className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-md bg-brand-red px-3 text-sm font-semibold text-white transition hover:bg-brand-red/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2"
             >
               Enquire Now <ArrowUpRight aria-hidden="true" size={14} />
             </Link>
