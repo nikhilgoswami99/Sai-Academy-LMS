@@ -5,11 +5,13 @@ export function PageHero({
   title,
   description,
   children,
+  compact = false,
 }: {
   eyebrow: string;
   title: string;
   description: string;
   children?: ReactNode;
+  compact?: boolean;
 }) {
   return (
     <section className="relative isolate overflow-hidden border-b border-border bg-secondary/60">
@@ -21,15 +23,15 @@ export function PageHero({
         aria-hidden="true"
         className="absolute -right-10 -top-14 -z-10 size-64 rounded-full border border-primary/10"
       />
-      <div className="mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:px-8 sm:py-12 md:grid-cols-[1fr_auto] md:items-end lg:px-12 lg:py-14">
+      <div className={`mx-auto grid max-w-6xl gap-6 px-5 sm:px-8 md:grid-cols-[1fr_auto] md:items-end lg:px-12 ${compact ? "py-6 sm:py-7 lg:py-8" : "gap-8 py-10 sm:py-12 lg:py-14"}`}>
         <div className="max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
             {eyebrow}
           </p>
-          <h1 className="mt-4 text-4xl font-semibold leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+          <h1 className={`${compact ? "mt-2 text-3xl sm:text-4xl lg:text-5xl" : "mt-4 text-4xl sm:text-5xl lg:text-6xl"} font-semibold leading-[1.08] tracking-tight text-foreground`}>
             {title}
           </h1>
-          <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
+          <p className={`${compact ? "mt-2" : "mt-3"} max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8`}>
             {description}
           </p>
         </div>

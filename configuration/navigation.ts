@@ -97,29 +97,34 @@ export const navigation = {
 
   student: [
     {
-      title: "Dashboard",
+      title: "Overview",
       url: "/student",
       icon: LayoutDashboard,
     },
     {
-      title: "My Classes",
-      url: "/student/classes",
+      title: "My Profile",
+      url: "/student/profile",
+      icon: UserRound,
+    },
+    {
+      title: "My Course",
+      url: "/student/course",
       icon: BookOpen,
     },
     {
-      title: "Attendance",
-      url: "/student/attendance",
-      icon: CalendarCheck,
+      title: "Study Materials",
+      url: "/student/materials",
+      icon: Layers,
+    },
+    {
+      title: "Assignments",
+      url: "/student/assignments",
+      icon: ClipboardCheck,
     },
     {
       title: "Results",
       url: "/student/results",
       icon: FileText,
-    },
-    {
-      title: "Fees",
-      url: "/student/fees",
-      icon: IndianRupee,
     },
   ],
 } satisfies Record<UserRole, readonly unknown[]>;

@@ -6,11 +6,9 @@ import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { signInWithEmailAndPassword } from "@/lib/auth/login";
-import { getCurrentUser } from "@/lib/auth/get-current-user";
-import { signOut } from "@/lib/auth/logout";
+import { signInWithIdentifier } from "@/lib/auth/login";
 
-type LoginErrors = { email?: string; password?: string };
+type LoginErrors = { identifier?: string; password?: string };
 
 function validateEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -18,7 +16,7 @@ function validateEmail(email: string) {
 
 export function LoginForm({ onForgotPassword }: { onForgotPassword: () => void }) {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<LoginErrors>({});
@@ -30,8 +28,8 @@ export function LoginForm({ onForgotPassword }: { onForgotPassword: () => void }
     if (loading) return;
 
     const nextErrors: LoginErrors = {};
-    if (!email.trim()) nextErrors.email = "Enter your email address.";
-    else if (!validateEmail(email.trim())) nextErrors.email = "Enter a valid email address.";
+    if (!identifier.trim()) nextErrors.identifier = "Enter your email address or student roll number.";
+    else if (identifier.includes("@") && !validateEmail(identifier.trim())) nextErrors.identifier = "Enter a valid email address.";
     if (!password) nextErrors.password = "Enter your password.";
     setErrors(nextErrors);
     setNotice("");
@@ -39,20 +37,13 @@ export function LoginForm({ onForgotPassword }: { onForgotPassword: () => void }
 
     setLoading(true);
     try {
-      const result = await signInWithEmailAndPassword(email.trim(), password);
+      const result = await signInWithIdentifier(identifier.trim(), password);
       if (!result.success) {
         setNotice(result.message);
         return;
       }
 
-      const currentUser = await getCurrentUser();
-      if (!currentUser.authenticated || !currentUser.authorized) {
-        await signOut();
-        setNotice("This account does not have access to the Academic Incharge dashboard.");
-        return;
-      }
-
-      router.replace("/admin");
+      router.replace(result.redirectTo);
       router.refresh();
     } catch {
       setNotice("We could not complete sign-in. Please try again.");
@@ -70,24 +61,24 @@ export function LoginForm({ onForgotPassword }: { onForgotPassword: () => void }
 
       <form className="space-y-5" onSubmit={handleSubmit} noValidate>
         <div className="space-y-2">
-          <label htmlFor="login-email" className="text-sm font-medium">Email address</label>
+          <label htmlFor="login-identifier" className="text-sm font-medium">Email or student roll number</label>
           <Input
-            id="login-email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            placeholder="you@example.com"
-            value={email}
+            id="login-identifier"
+            name="identifier"
+            type="text"
+            autoComplete="username"
+            placeholder="you@example.com or DEL2100125"
+            value={identifier}
             onChange={(event) => {
-              setEmail(event.target.value);
-              setErrors((current) => ({ ...current, email: undefined }));
+              setIdentifier(event.target.value);
+              setErrors((current) => ({ ...current, identifier: undefined }));
               setNotice("");
             }}
-            aria-invalid={Boolean(errors.email)}
-            aria-describedby={errors.email ? "login-email-error" : undefined}
+            aria-invalid={Boolean(errors.identifier)}
+            aria-describedby={errors.identifier ? "login-identifier-error" : undefined}
             className="h-11 px-3"
           />
-          {errors.email && <p id="login-email-error" className="text-sm text-destructive" role="alert">{errors.email}</p>}
+          {errors.identifier && <p id="login-identifier-error" className="text-sm text-destructive" role="alert">{errors.identifier}</p>}
         </div>
 
         <div className="space-y-2">

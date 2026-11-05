@@ -10,6 +10,7 @@ export default function CoursePage() {
         eyebrow="Explore the course"
         title="Crash Course"
         description="Choose a gift token to explore its fee details."
+        compact
       >
         <Link
           href="/courses"
@@ -18,7 +19,7 @@ export default function CoursePage() {
           <ArrowLeft aria-hidden="true" size={16} /> All courses
         </Link>
       </PageHero>
-      <PageContainer>
+      <PageContainer className="pt-8 sm:pt-10 lg:pt-12">
         <GiftTokenFees />
       </PageContainer>
     </main>

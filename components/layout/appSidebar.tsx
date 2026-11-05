@@ -16,11 +16,8 @@ import {
 } from "@/components/ui/sidebar";
 import { navigation, type UserRole } from "../../configuration/navigation";
 
-const role: UserRole = "admin";
-
-const items = navigation[role];
-
-export function AppSidebar() {
+export function AppSidebar({ role = "admin" }: { role?: UserRole }) {
+  const items = navigation[role];
   const pathname = usePathname();
 
   return (
