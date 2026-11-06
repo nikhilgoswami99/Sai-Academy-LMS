@@ -150,6 +150,8 @@ function GiftTokenDetails({
     token,
     subjectCount,
   );
+  const chargedSubjectCount =
+    token.id >= 3 ? Math.min(subjectCount, 4) : subjectCount;
 
   return (
     <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-hidden rounded-3xl border-0 bg-transparent p-0 shadow-2xl sm:max-w-xl">
@@ -166,15 +168,15 @@ function GiftTokenDetails({
           <div className="relative pr-8">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold tracking-wide text-white/90">
               <Sparkles aria-hidden="true" size={14} />
-              Crash Course • Fee structure
+              Gift Token 1 • Crash Course
             </span>
             <DialogHeader className="mt-4 gap-2 text-left">
               <DialogTitle className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
                 Class {token.classes}
               </DialogTitle>
               <DialogDescription className="text-sm leading-6 text-white/75">
-                Sample pricing for the Crash Course. Final fees and inclusions
-                are confirmed by the academy.
+                This is आओ REVISE करें crash course fees. <br/>
+                It includes Acads + C.C + T.S+ I.Q + O.C
               </DialogDescription>
             </DialogHeader>
           </div>
@@ -191,10 +193,21 @@ function GiftTokenDetails({
                   {formatCurrency(total)}
                 </p>
               </div>
-              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-brand-green/10 px-3 py-2 text-sm font-bold text-brand-green">
-                <BadgePercent aria-hidden="true" size={17} />
-                {token.discount}% payable
-              </span>
+              <div className="inline-flex shrink-0 flex-col items-end rounded-xl bg-brand-green/10 px-3 py-2 text-right text-brand-green">
+                <span className="inline-flex items-center gap-1.5 text-sm font-bold">
+                  <BadgePercent aria-hidden="true" size={17} />
+                  {token.discount}% payable
+                </span>
+                <span className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-amber-800">
+                  <span aria-hidden="true" className="text-sm leading-none">
+                    🪔
+                  </span>
+                  Diwali Offer
+                </span>
+                <span className="mt-1 text-[12px] leading-4">
+                  Applicable till 12th of November
+                </span>
+              </div>
             </div>
             <div className="mt-5 space-y-3 border-t border-border/70 pt-4 text-sm">
               <div className="flex justify-between gap-4 text-muted-foreground">
@@ -205,7 +218,11 @@ function GiftTokenDetails({
               </div>
               <div className="flex justify-between gap-4 text-muted-foreground">
                 <span>
-                  {subjectCount} subjects ({Math.min(subjectCount, token.id >= 3 ? 4 : subjectCount)} charged) course fee for {token.months} months
+                  Course fee for {subjectCount}{" "}
+                  {subjectCount === 1 ? "subject" : "subjects"}
+                  {chargedSubjectCount < subjectCount &&
+                    ` (${chargedSubjectCount} charged)`}{" "}
+                  over {token.months} months
                 </span>
                 <span className="font-medium text-foreground">
                   {formatCurrency(courseFee)}
@@ -245,10 +262,21 @@ function GiftTokenDetails({
 
           <div>
             <h4 className="font-semibold tracking-tight text-foreground">
-              What’s included
+              <span className="text-brand-red">आओ</span>{" "}
+              <span className="text-brand-blue">REVISE</span>{" "}
+              <span className="text-brand-red">करें</span>
             </h4>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Crash Course includes
+            </p>
             <ul className="mt-3 space-y-3">
-              {token.includes.map((item) => (
+              {[
+                "Academics (B-Batch)",
+                "Crash Course (C.C)",
+                "Test Series (T.S)",
+                "Important Questions (I.Q)",
+                "Online Content (O.C)",
+              ].map((item) => (
                 <li
                   key={item}
                   className="flex items-start gap-3 text-sm leading-6 text-muted-foreground"
@@ -261,18 +289,6 @@ function GiftTokenDetails({
               ))}
             </ul>
           </div>
-
-          <p className="rounded-xl bg-secondary/60 p-4 text-xs leading-5 text-muted-foreground">
-            These are sample values for preview purposes only and are not an
-            official offer or confirmed academy fee.
-          </p>
-
-          <Link
-            href="/admissions"
-            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-brand-red px-5 text-sm font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-brand-red/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2 motion-reduce:transition-none"
-          >
-            Enquire about this plan <ArrowRight aria-hidden="true" size={16} />
-          </Link>
         </div>
       </div>
     </DialogContent>
@@ -693,8 +709,8 @@ export function GiftTokenFees() {
             >
               {token.months === 5 && (
                 <p className="mb-3 rounded-lg border border-brand-red/20 bg-brand-red/5 px-3 py-2 text-xs leading-5 text-brand-red">
-                  Note – This includes your March present / next session
-                  classes.
+                  Note – This includes your present / next session classes in
+                  March.
                 </p>
               )}
               <span
@@ -791,8 +807,7 @@ export function GiftTokenFees() {
                   photocopy amount separately at the office.
                 </p>
                 <p>
-                  2. ARK course students pay A+ fees of ₹100 per student per
-                  month separately at the office.
+                  2. ARK course students pay A+ fees of ₹100 per subject separately at the office.
                 </p>
                 <p>
                   3. New Students will have to pay RS 100 registration fee at the office.

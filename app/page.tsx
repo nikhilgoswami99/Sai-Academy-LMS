@@ -15,7 +15,7 @@ export default function Home() {
           <div className="landing-hero-grain pointer-events-none absolute inset-0" aria-hidden="true" />
           <div className="pointer-events-none absolute -left-32 top-16 size-72 rounded-full bg-white/50 blur-3xl" aria-hidden="true" />
           <div className="pointer-events-none absolute -right-20 bottom-0 size-80 rounded-full bg-sky-100/60 blur-3xl" aria-hidden="true" />
-          <div className="relative z-10 mx-auto grid min-h-[calc(100svh-5rem)] max-w-330 items-center gap-12 px-5 py-14 sm:px-8 sm:py-16 md:grid-cols-[1.08fr_0.92fr] md:gap-8 lg:gap-14 lg:px-12 lg:py-20">
+          <div className="relative z-10 mx-auto grid min-h-[calc(100svh-5rem)] max-w-330 items-center gap-12 px-5 pb-14 pt-2 sm:px-8 sm:pb-16 sm:pt-4 md:grid-cols-[1.08fr_0.92fr] md:gap-8 lg:gap-14 lg:px-12 lg:pb-20 lg:pt-8">
             <div className="relative z-10 max-w-3xl">
               <p className="hero-reveal mb-6 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground/70 sm:text-xs">
                 <span className="h-px w-9 bg-brand-red" aria-hidden="true" /> Building futures through education

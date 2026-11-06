@@ -18,7 +18,9 @@ export default function CoursesPage() {
             />
           </div>
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-            आओ <span className="text-brand-red">REVISE</span> करें
+            <span className="text-brand-red">आओ</span>{" "}
+            <span className="text-brand-blue">REVISE</span>{" "}
+            <span className="text-brand-red">करें</span>
           </h1>
           <p className="mt-4 text-sm font-semibold uppercase tracking-[0.17em] text-brand-blue sm:text-base">
             Crash Course
