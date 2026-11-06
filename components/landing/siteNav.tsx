@@ -11,7 +11,7 @@ import { AuthDialog } from "@/components/auth/auth-dialog";
 const links = [
   { href: "/", label: "Home" },
   { href: "/courses", label: "Courses" },
-  { href: "/teachers", label: "Teachers" },
+  // { href: "/teachers", label: "Teachers" },
 ];
 
 export function SiteNav() {
