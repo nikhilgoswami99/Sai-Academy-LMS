@@ -208,7 +208,7 @@ function GiftTokenDetails({
                   Diwali Offer
                 </span>
                 <span className="mt-1 text-[12px] leading-4">
-                  Applicable till 12th of November
+                  Applicable till 11th of November 2026
                 </span>
               </div>
             </div>
