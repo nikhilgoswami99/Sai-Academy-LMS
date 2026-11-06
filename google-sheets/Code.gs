@@ -22,8 +22,11 @@ function doPost(e) {
       sheet.appendRow([
         "Submitted At", "Payment Status", "Token", "Class", "Subjects",
         "Student Name", "Phone", "School", "Board", "Academic Year",
-        "City Code", "Learning Mode", "Data Consent",
+        "City Code", "Learning Mode", "Data Consent", "How do you know SAI ACADEMY?",
       ]);
+    }
+    if (sheet.getRange(1, 14).getValue() !== "How do you know SAI ACADEMY?") {
+      sheet.getRange(1, 14).setValue("How do you know SAI ACADEMY?");
     }
 
     sheet.appendRow([
@@ -40,6 +43,7 @@ function doPost(e) {
       payload.cityCode,
       payload.learningMode,
       payload.consent === true ? "Yes" : "No",
+      payload.referralSource,
     ]);
     return jsonResponse({ ok: true });
   } catch (error) {

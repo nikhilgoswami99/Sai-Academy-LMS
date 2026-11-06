@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowUpRight, BookOpen, Check, GraduationCap } from "lucide-react";
+import Image from "next/image";
+import { ArrowUpRight, Check } from "lucide-react";
 import { SiteNav } from "@/components/landing/siteNav";
 import { AcademicPrograms } from "@/components/landing/academic-programs";
 import { AuthDialog } from "@/components/auth/auth-dialog";
@@ -14,13 +15,13 @@ export default function Home() {
           <div className="landing-hero-grain pointer-events-none absolute inset-0" aria-hidden="true" />
           <div className="pointer-events-none absolute -left-32 top-16 size-72 rounded-full bg-white/50 blur-3xl" aria-hidden="true" />
           <div className="pointer-events-none absolute -right-20 bottom-0 size-80 rounded-full bg-sky-100/60 blur-3xl" aria-hidden="true" />
-          <div className="relative mx-auto grid min-h-[calc(100svh-5rem)] max-w-330 items-center gap-12 px-5 py-14 sm:px-8 sm:py-16 md:grid-cols-[1.08fr_0.92fr] md:gap-8 lg:gap-14 lg:px-12 lg:py-20">
+          <div className="relative z-10 mx-auto grid min-h-[calc(100svh-5rem)] max-w-330 items-center gap-12 px-5 py-14 sm:px-8 sm:py-16 md:grid-cols-[1.08fr_0.92fr] md:gap-8 lg:gap-14 lg:px-12 lg:py-20">
             <div className="relative z-10 max-w-3xl">
               <p className="hero-reveal mb-6 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground/70 sm:text-xs">
                 <span className="h-px w-9 bg-brand-red" aria-hidden="true" /> Building futures through education
               </p>
               <h1 aria-label="25+ Years of Experience and Excellence" className="hero-reveal hero-reveal-delay-1 font-bold leading-[0.98] tracking-[-0.055em] text-foreground">
-                <span aria-hidden="true" className="block text-[clamp(5rem,11vw,8.5rem)]">25<span className="text-brand-red">+</span></span>
+                <span aria-hidden="true" className="block text-[clamp(5rem,11vw,8.5rem)]">25<span>+</span></span>
                 <span aria-hidden="true" className="mt-2 block max-w-3xl text-[clamp(2.25rem,4.6vw,4.25rem)]">Years of Experience and Excellence</span>
               </h1>
               <p className="hero-reveal hero-reveal-delay-2 mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:mt-7 sm:text-lg sm:leading-8">
@@ -42,28 +43,16 @@ export default function Home() {
             <div className="hero-art-reveal relative mx-auto flex min-h-[410px] w-full max-w-[480px] items-center justify-center px-3 sm:min-h-[470px] md:ml-auto md:px-0">
               <div className="pointer-events-none absolute left-1/2 top-1/2 size-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/80" aria-hidden="true" />
               <div className="pointer-events-none absolute left-1/2 top-1/2 size-[62%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand-blue/10" aria-hidden="true" />
-              <div className="hero-art-float relative z-10 flex min-h-[340px] w-full max-w-[390px] flex-col justify-between rounded-[2rem] border border-white/90 bg-white/75 p-6 shadow-[0_32px_90px_-38px_rgba(16,47,104,0.28)] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 sm:min-h-[390px] sm:p-8">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-brand-red/15 bg-white/80 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.13em] text-foreground/80 sm:text-[11px]">
-                    <span className="size-1.5 rounded-full bg-brand-red" aria-hidden="true" /> The SAI Academy story
-                  </span>
-                  <span className="flex size-10 items-center justify-center rounded-full bg-sky-50 text-brand-blue"><GraduationCap aria-hidden="true" size={20} /></span>
-                </div>
-                <div className="relative py-8 text-center">
-                  <div className="pointer-events-none absolute left-1/2 top-1/2 size-48 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-100/70 blur-2xl" aria-hidden="true" />
-                  <BookOpen aria-hidden="true" className="relative mx-auto size-12 text-brand-blue" strokeWidth={1.4} />
-                  <p className="relative mt-4 font-serif text-2xl italic tracking-tight text-foreground sm:text-3xl">Learning with purpose</p>
-                  <p className="relative mt-2 text-xs text-muted-foreground">A tradition of guidance and growth</p>
-                </div>
-                <div className="grid grid-cols-2 divide-x divide-border border-t border-border pt-5">
-                  <div className="pr-4"><p className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">25<span className="text-brand-red">+</span></p><p className="mt-1 text-[11px] leading-5 text-muted-foreground sm:text-xs">Years of experience</p></div>
-                  <div className="pl-5">
-                     <p className="mt-1 text-[11px] leading-5 text-muted-foreground sm:text-xs">Classes</p>
-                    <p className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">III to XII</p>
-                 
-                  </div>
-                </div>
-              </div>
+              <div className="pointer-events-none absolute left-1/2 top-1/2 z-0 size-[76%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-brand-blue/25 via-sky-300/20 to-transparent blur-2xl" aria-hidden="true" />
+              <Image
+                src="/academy-logo.png"
+                alt="SAI Academy"
+                width={420}
+                height={420}
+                sizes="(max-width: 640px) 78vw, (max-width: 768px) 52vw, 42vw"
+                priority
+                className="relative z-10 h-auto w-[min(78vw,320px)] object-contain drop-shadow-[0_24px_45px_rgba(16,47,104,0.16)] transition-transform duration-300 hover:scale-[1.03] sm:w-[min(52vw,390px)] md:w-[min(42vw,420px)]"
+              />
             </div>
           </div>
         </section>

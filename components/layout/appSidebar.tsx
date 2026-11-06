@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 import {
   Sidebar,
@@ -24,7 +25,14 @@ export function AppSidebar({ role = "admin" }: { role?: UserRole }) {
     <Sidebar>
       <SidebarHeader className="border-b border-sidebar-border px-3 py-4">
         <div className="flex items-center gap-3 px-1 py-1">
-          <span aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">SA</span>
+          <Image
+            src="/academy-logo.png"
+            alt="SAI Academy logo"
+            width={44}
+            height={44}
+            className="shrink-0"
+            priority
+          />
           <div className="min-w-0">
             <h1 className="brand-wordmark text-base font-semibold tracking-tight text-sidebar-primary">SAI ACADEMY</h1>
             <p className="text-xs text-sidebar-foreground/60">

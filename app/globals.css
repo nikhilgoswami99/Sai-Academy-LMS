@@ -181,7 +181,7 @@
 }
 
 @utility brand-wordmark {
-  font-family: var(--font-geist-sans), sans-serif;
+  font-family: "Times New Roman", Times, serif;
   letter-spacing: -0.035em;
 }
 

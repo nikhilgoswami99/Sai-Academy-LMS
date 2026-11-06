@@ -1,16 +1,22 @@
 import Link from "next/link";
-import { BookOpenCheck } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 export default function CoursesPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-10 text-foreground">
-      <article className="relative flex min-h-[30vh] w-[90%] flex-col justify-center overflow-hidden rounded-3xl border border-border bg-card p-7 shadow-[0_24px_70px_-30px_rgba(16,47,104,0.3)] sm:p-10 lg:p-14">
+      <article className="relative flex min-h-[28vh] w-[90%] flex-col justify-center overflow-hidden rounded-3xl border border-border bg-card px-5 py-4 shadow-[0_24px_70px_-30px_rgba(16,47,104,0.3)] sm:px-7 sm:py-6 lg:px-9 lg:py-8">
         <div className="pointer-events-none absolute -right-16 -top-20 size-64 rounded-full bg-secondary/70" aria-hidden="true" />
         <div className="relative mx-auto w-full max-w-5xl">
-          <span className="mb-6 flex size-14 items-center justify-center rounded-2xl bg-secondary text-brand-blue">
-            <BookOpenCheck aria-hidden="true" size={27} strokeWidth={1.6} />
-          </span>
+          <div className="mb-6 flex items-center justify-start">
+            <Image
+              src="/academy-logo.png"
+              alt="SAI Academy logo"
+              width={136}
+              height={136}
+              className="shrink-0"
+            />
+          </div>
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
             आओ <span className="text-brand-red">REVISE</span> करें
           </h1>

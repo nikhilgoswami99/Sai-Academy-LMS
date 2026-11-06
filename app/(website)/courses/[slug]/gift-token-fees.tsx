@@ -1,7 +1,8 @@
 ﻿"use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   BadgePercent,
@@ -126,7 +127,8 @@ const formatCurrency = (amount: number) =>
   }).format(amount);
 
 function calculateFee(token: GiftToken, subjectCount: number) {
-  const courseFee = subjectCount * token.totalFee;
+  const chargeableSubjects = token.id >= 3 ? Math.min(subjectCount, 4) : subjectCount;
+  const courseFee = chargeableSubjects * token.totalFee;
   const total = courseFee * (token.discount / 100);
   const discountAmount = courseFee - total;
 
@@ -203,7 +205,7 @@ function GiftTokenDetails({
               </div>
               <div className="flex justify-between gap-4 text-muted-foreground">
                 <span>
-                  {subjectCount} subjects course fee for {token.months} months
+                  {subjectCount} subjects ({Math.min(subjectCount, token.id >= 3 ? 4 : subjectCount)} charged) course fee for {token.months} months
                 </span>
                 <span className="font-medium text-foreground">
                   {formatCurrency(courseFee)}
@@ -281,10 +283,12 @@ function EnrollStepDialog({
   token,
   subjectCount,
   onClose,
+  onDone,
 }: {
   token: GiftToken;
   subjectCount: number;
   onClose: () => void;
+  onDone: () => void;
 }) {
   const [step, setStep] = useState<1 | 2>(1);
   const [saving, setSaving] = useState(false);
@@ -296,6 +300,7 @@ function EnrollStepDialog({
     fullName: "",
     phone: "",
     school: "",
+    referralSource: "",
     classGroup: token.id >= 5 ? "" : token.classes,
     board: "",
     academicYear: "",
@@ -316,6 +321,7 @@ function EnrollStepDialog({
         fullName: student.fullName,
         phone: student.phone,
         school: student.school,
+        referralSource: student.referralSource,
         board: student.board,
         academicYear: student.academicYear,
         cityCode: student.cityCode,
@@ -351,6 +357,10 @@ function EnrollStepDialog({
       </DialogHeader>
 
       {step === 1 ? (
+        <>
+        <p className="rounded-lg border border-brand-red/20 bg-brand-red/5 px-4 py-3 text-sm font-medium text-brand-red">
+          Inform your friends and get assured gifts.
+        </p>
         <form onSubmit={continueToPayment} className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
             <EnrollField label="Student full name">
@@ -382,6 +392,22 @@ function EnrollStepDialog({
                 value={student.school}
                 onChange={(event) =>
                   setStudent({ ...student, school: event.target.value })
+                }
+                className={enrollInputClass}
+              />
+            </EnrollField>
+            <EnrollField
+              label={
+                <span className="whitespace-nowrap">
+                  How do you know <span className="brand-wordmark font-bold">SAI ACADEMY</span>?
+                </span>
+              }
+            >
+              <input
+                required
+                value={student.referralSource}
+                onChange={(event) =>
+                  setStudent({ ...student, referralSource: event.target.value })
                 }
                 className={enrollInputClass}
               />
@@ -485,6 +511,7 @@ function EnrollStepDialog({
             </button>
           </div>
         </form>
+        </>
       ) : (
         <div className="space-y-4">
           <p className="rounded-lg bg-secondary/60 px-4 py-3 text-sm leading-5">
@@ -492,15 +519,25 @@ function EnrollStepDialog({
             <strong>Class {student.classGroup || token.classes}</strong>.
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
-            <PaymentQrPlaceholder title="Classes IX, X, XI, XII" />
-            <PaymentQrPlaceholder title="Classes III to VIII" />
+            <PaymentQrPlaceholder
+              title="Classes IX, X, XI, XII"
+              paymentNumber="9839709827"
+            />
+            <PaymentQrPlaceholder
+              title="Classes III to VIII"
+              paymentNumber="6393330437"
+            />
           </div>
           <p className="rounded-lg border border-border bg-muted/50 px-4 py-3 text-sm leading-6">
             After payment, send the payment receipt on WhatsApp to{" "}
-            <strong className="whitespace-nowrap">+91 98765 43210</strong>{" "}
-            <span className="text-muted-foreground">
-              (dummy number—update before launch)
-            </span>
+            <a
+              href="https://wa.me/916393330437"
+              target="_blank"
+              rel="noreferrer"
+              className="whitespace-nowrap font-semibold text-brand-red underline-offset-4 hover:underline"
+            >
+              +91 63933 30437
+            </a>
             .
           </p>
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-between">
@@ -513,7 +550,7 @@ function EnrollStepDialog({
             </button>
             <button
               type="button"
-              onClick={onClose}
+              onClick={onDone}
               className="min-h-11 rounded-md bg-brand-blue px-5 text-sm font-semibold text-white hover:bg-brand-blue/90"
             >
               Done
@@ -532,7 +569,7 @@ function EnrollField({
   label,
   children,
 }: {
-  label: string;
+  label: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
@@ -543,18 +580,47 @@ function EnrollField({
   );
 }
 
-function PaymentQrPlaceholder({ title }: { title: string }) {
+function PaymentQrPlaceholder({
+  title,
+  paymentNumber,
+}: {
+  title: string;
+  paymentNumber: string;
+}) {
+  const [imageAvailable, setImageAvailable] = useState(true);
+  const imageSrc = title === "Classes IX, X, XI, XII"
+    ? "/payment-qr/classes-ix-xii.png.jpeg"
+    : "/payment-qr/classes-iii-viii.png.jpeg";
+
   return (
     <div className="rounded-xl border border-border p-3 text-center">
       <p className="min-h-10 text-sm font-semibold leading-5">{title}</p>
       <div
         role="img"
         aria-label={`${title} payment QR code image placeholder`}
-        className="mx-auto mt-2 flex aspect-square w-full max-w-52 flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-muted/40 text-muted-foreground"
+        className="relative mx-auto mt-2 flex aspect-square w-full max-w-52 flex-col items-center justify-center gap-2 overflow-hidden rounded-lg border-2 border-dashed border-border bg-muted/40 text-muted-foreground"
       >
-        <QrCode aria-hidden="true" size={54} strokeWidth={1.4} />
-        <span className="px-3 text-xs">QR image goes here</span>
+        {imageAvailable ? (
+          <Image
+            src={imageSrc}
+            alt={`${title} payment QR code`}
+            fill
+            sizes="208px"
+            className="object-contain p-2"
+            onError={() => setImageAvailable(false)}
+          />
+        ) : (
+          <>
+            <QrCode aria-hidden="true" size={54} strokeWidth={1.4} />
+            <span className="px-3 text-xs">Add QR image to {imageSrc}</span>
+          </>
+        )}
       </div>
+      <p className="mt-3 text-xs leading-5 text-muted-foreground">
+        You can pay your fees using this number:
+        <br />
+        <span className="font-semibold text-brand-red">{paymentNumber}</span>
+      </p>
     </div>
   );
 }
@@ -568,10 +634,25 @@ export function GiftTokenFees() {
   const [enrollOpen, setEnrollOpen] = useState(false);
   const [enrollToken, setEnrollToken] = useState<GiftToken>(tokens[0]);
   const [enrollSubjectCount, setEnrollSubjectCount] = useState(1);
+  const [showEnrollmentConfirmation, setShowEnrollmentConfirmation] =
+    useState(false);
   const getSubjectCount = (token: GiftToken) => subjectCounts[token.id] ?? 1;
+
+  useEffect(() => {
+    if (!showEnrollmentConfirmation) return;
+
+    const timeout = window.setTimeout(
+      () => setShowEnrollmentConfirmation(false),
+      20_000,
+    );
+    return () => window.clearTimeout(timeout);
+  }, [showEnrollmentConfirmation]);
 
   return (
     <section aria-labelledby="gift-token-heading">
+      <p className="mb-5 w-fit rounded-lg border border-brand-red/20 bg-brand-red/5 px-4 py-3 text-sm font-medium text-brand-red">
+        Inform your friends and get assured gifts.
+      </p>
       <div className="mb-8 max-w-2xl">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-red">
           Choose your plan
@@ -599,7 +680,7 @@ export function GiftTokenFees() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
         {tokens.map((token, index) => {
           const subjectCount = getSubjectCount(token);
           const { courseFee, total } = calculateFee(token, subjectCount);
@@ -608,8 +689,14 @@ export function GiftTokenFees() {
             <article
               key={token.id}
               style={{ animationDelay: `${index * 70}ms` }}
-              className="group relative isolate overflow-hidden rounded-3xl border border-border/80 bg-card p-5 text-left text-foreground shadow-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1.5 hover:border-brand-blue/40 hover:shadow-xl motion-reduce:transform-none motion-reduce:transition-none animate-in fade-in slide-in-from-bottom-2 sm:p-5"
+              className="group relative isolate w-full min-w-0 overflow-hidden rounded-3xl border border-border/80 bg-card p-5 text-left text-foreground shadow-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1.5 hover:border-brand-blue/40 hover:shadow-xl motion-reduce:transform-none motion-reduce:transition-none animate-in fade-in slide-in-from-bottom-2 sm:p-5"
             >
+              {token.months === 5 && (
+                <p className="mb-3 rounded-lg border border-brand-red/20 bg-brand-red/5 px-3 py-2 text-xs leading-5 text-brand-red">
+                  Note – This includes your March present / next session
+                  classes.
+                </p>
+              )}
               <span
                 aria-hidden="true"
                 className="absolute -right-8 -top-10 -z-10 size-36 rounded-full bg-gradient-to-br from-brand-blue/10 to-brand-green/5 transition-transform duration-500 group-hover:scale-125"
@@ -657,7 +744,7 @@ export function GiftTokenFees() {
                 }
                 className="mt-1 h-10 w-full cursor-pointer rounded-md border border-border bg-card px-3 text-sm font-medium text-foreground outline-none transition focus-visible:border-brand-blue focus-visible:ring-2 focus-visible:ring-brand-blue/30"
               >
-                {Array.from({ length: 5 }, (_, index) => index + 1).map(
+                {Array.from({ length: token.id >= 3 ? 6 : 5 }, (_, index) => index + 1).map(
                   (count) => (
                     <option key={count} value={count}>
                       {count} {count === 1 ? "subject" : "subjects"}
@@ -665,6 +752,15 @@ export function GiftTokenFees() {
                   ),
                 )}
               </select>
+              {token.id === 3 || token.id === 4 ? (
+                <p className="mt-2 rounded-lg border border-brand-green/20 bg-brand-green/5 px-3 py-2 text-xs leading-5 text-muted-foreground">
+                  Note: Hindi and AI are free for Classes IX and X.
+                </p>
+              ) : token.id >= 5 ? (
+                <p className="mt-2 rounded-lg border border-brand-green/20 bg-brand-green/5 px-3 py-2 text-xs leading-5 text-muted-foreground">
+                  Note: Hindi, Sanskrit, AI, and the English Speaking course are free for Class VIII and below.
+                </p>
+              ) : null}
               <span className="mt-2 block text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
                 Course Monthly fee per subject
               </span>
@@ -698,6 +794,9 @@ export function GiftTokenFees() {
                   2. ARK course students pay A+ fees of ₹100 per student per
                   month separately at the office.
                 </p>
+                <p>
+                  3. New Students will have to pay RS 100 registration fee at the office.
+                </p>
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
@@ -729,8 +828,7 @@ export function GiftTokenFees() {
       </div>
 
       <p className="mt-8 rounded-xl border border-border bg-secondary/60 px-5 py-4 text-center text-sm font-medium leading-6 text-foreground">
-        Gift Token 2 will be applicable after 12th of november. The diwali offer
-        is valid till 11th of november
+        Gift Token 2 will start from 12th November with increased fees.
       </p>
 
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
@@ -747,9 +845,23 @@ export function GiftTokenFees() {
             token={enrollToken}
             subjectCount={enrollSubjectCount}
             onClose={() => setEnrollOpen(false)}
+            onDone={() => {
+              setEnrollOpen(false);
+              setShowEnrollmentConfirmation(true);
+            }}
           />
         )}
       </Dialog>
+      {showEnrollmentConfirmation && (
+        <div
+          role="status"
+          className="fixed bottom-5 left-1/2 z-[100] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 rounded-xl border border-brand-green/20 bg-card px-5 py-4 text-center text-sm leading-6 text-foreground shadow-xl"
+        >
+          You have successfully enrolled for the crash course. You will get your
+          login credentials after 12th of November. We will message you about
+          the payment confirmation within 24 hours.
+        </div>
+      )}
     </section>
   );
 }

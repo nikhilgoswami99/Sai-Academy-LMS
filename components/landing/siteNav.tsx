@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 
@@ -11,7 +12,6 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/courses", label: "Courses" },
   { href: "/teachers", label: "Teachers" },
-  { href: "/contact", label: "Contact" },
 ];
 
 export function SiteNav() {
@@ -58,9 +58,10 @@ export function SiteNav() {
           <Link
           href="/"
           onClick={closeMenu}
-          className="brand-wordmark shrink-0 text-base font-bold tracking-[0.02em] text-foreground focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:text-lg"
+          className="flex shrink-0 items-center gap-2 brand-wordmark text-base font-bold tracking-[0.02em] text-foreground focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:text-lg"
           >
-          SAI ACADEMY
+          <Image src="/academy-logo.png" alt="" width={52} height={52} priority />
+          <span>SAI ACADEMY</span>
           </Link>
 
           <nav aria-label="Main navigation" className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 lg:flex">
