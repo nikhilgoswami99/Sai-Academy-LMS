@@ -319,6 +319,7 @@ function EnrollStepDialog({
     fullName: "",
     phone: "",
     school: "",
+    subjectNames: "",
     referralSource: "",
     classGroup: token.id >= 5 ? "" : token.classes,
     board: "",
@@ -340,6 +341,7 @@ function EnrollStepDialog({
         fullName: student.fullName,
         phone: student.phone,
         school: student.school,
+        subjectNames: student.subjectNames,
         referralSource: student.referralSource,
         board: student.board,
         academicYear: student.academicYear,
@@ -455,6 +457,17 @@ function EnrollStepDialog({
                   className={`${enrollInputClass} bg-muted`}
                 />
               )}
+            </EnrollField>
+            <EnrollField label="Subject names">
+              <input
+                required
+                placeholder="e.g. Mathematics, Physics, Chemistry"
+                value={student.subjectNames}
+                onChange={(event) =>
+                  setStudent({ ...student, subjectNames: event.target.value })
+                }
+                className={enrollInputClass}
+              />
             </EnrollField>
             <EnrollField label="Board">
               <input

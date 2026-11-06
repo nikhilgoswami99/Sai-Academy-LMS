@@ -9,6 +9,7 @@ const enrollmentRequestSchema = z.object({
   fullName: z.string().trim().min(1).max(200),
   phone: z.string().trim().min(7).max(20).regex(/^\+?[0-9][0-9\s().-]*$/),
   school: z.string().trim().min(1).max(200),
+  subjectNames: z.string().trim().min(1).max(500),
   referralSource: z.string().trim().min(1).max(500),
   board: z.string().trim().min(1).max(100),
   academicYear: z.string().trim().min(1).max(30),
