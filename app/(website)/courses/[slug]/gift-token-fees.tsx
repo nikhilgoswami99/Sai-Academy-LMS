@@ -154,7 +154,7 @@ function GiftTokenDetails({
     token.id >= 3 ? Math.min(subjectCount, 4) : subjectCount;
 
   return (
-    <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-hidden rounded-3xl border-0 bg-transparent p-0 shadow-2xl sm:max-w-xl">
+    <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-hidden rounded-3xl border-0 bg-transparent p-0 shadow-2xl sm:max-w-2xl">
       <div className="max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain rounded-3xl bg-card">
         <div className="relative overflow-hidden bg-brand-blue px-6 py-7 text-white sm:px-8 sm:py-9">
           <div
@@ -182,9 +182,9 @@ function GiftTokenDetails({
           </div>
         </div>
 
-        <div className="space-y-6 p-6 sm:p-8">
-          <div className="rounded-2xl border border-brand-blue/10 bg-background/70 p-5">
-            <div className="flex items-start justify-between gap-4">
+        <div className="space-y-5 p-4 sm:space-y-6 sm:p-8">
+          <div className="rounded-2xl border border-brand-blue/10 bg-background/70 p-4 sm:p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                   Fees to pay
@@ -193,7 +193,7 @@ function GiftTokenDetails({
                   {formatCurrency(total)}
                 </p>
               </div>
-              <div className="inline-flex shrink-0 flex-col items-end rounded-xl bg-brand-green/10 px-3 py-2 text-right text-brand-green">
+              <div className="inline-flex w-fit shrink-0 flex-col items-start rounded-xl bg-brand-green/10 px-3 py-2 text-left text-brand-green sm:items-end sm:self-auto sm:text-right">
                 <span className="inline-flex items-center gap-1.5 text-sm font-bold">
                   <BadgePercent aria-hidden="true" size={17} />
                   {token.discount}% payable
@@ -210,13 +210,13 @@ function GiftTokenDetails({
               </div>
             </div>
             <div className="mt-5 space-y-3 border-t border-border/70 pt-4 text-sm">
-              <div className="flex justify-between gap-4 text-muted-foreground">
+              <div className="flex flex-col gap-1 text-muted-foreground sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <span>Monthly fee per subject</span>
                 <span className="font-medium text-foreground">
                   {formatCurrency(token.feePerSubject)}
                 </span>
               </div>
-              <div className="flex justify-between gap-4 text-muted-foreground">
+              <div className="flex flex-col gap-1 text-muted-foreground sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <span>
                   Course fee for {subjectCount}{" "}
                   {subjectCount === 1 ? "subject" : "subjects"}
@@ -228,13 +228,13 @@ function GiftTokenDetails({
                   {formatCurrency(courseFee)}
                 </span>
               </div>
-              <div className="flex justify-between gap-4 text-muted-foreground">
+              <div className="flex flex-col gap-1 text-muted-foreground sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <span>Savings</span>
                 <span className="font-medium text-brand-green">
                   −{formatCurrency(discountAmount)}
                 </span>
               </div>
-              <div className="flex justify-between gap-4 border-t border-border/70 pt-3 font-semibold text-foreground">
+              <div className="flex flex-col gap-1 border-t border-border/70 pt-3 font-semibold text-foreground sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <span>Fees to pay</span>
                 <span>{formatCurrency(total)}</span>
               </div>
