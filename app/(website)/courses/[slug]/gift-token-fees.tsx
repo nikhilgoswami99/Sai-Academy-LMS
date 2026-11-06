@@ -154,7 +154,10 @@ function GiftTokenDetails({
     token.id >= 3 ? Math.min(subjectCount, 4) : subjectCount;
 
   return (
-    <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-hidden rounded-3xl border-0 bg-transparent p-0 shadow-2xl sm:max-w-2xl">
+    <DialogContent
+      closeButtonClassName="text-white hover:bg-white/20 hover:text-white"
+      className="max-h-[calc(100dvh-2rem)] overflow-hidden rounded-3xl border-0 bg-transparent p-0 shadow-2xl sm:max-w-2xl"
+    >
       <div className="max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain rounded-3xl bg-card">
         <div className="relative overflow-hidden bg-brand-blue px-6 py-7 text-white sm:px-8 sm:py-9">
           <div
@@ -652,16 +655,23 @@ export function GiftTokenFees() {
   const [enrollSubjectCount, setEnrollSubjectCount] = useState(1);
   const [showEnrollmentConfirmation, setShowEnrollmentConfirmation] =
     useState(false);
+  const [confirmationSecondsRemaining, setConfirmationSecondsRemaining] =
+    useState(30);
   const getSubjectCount = (token: GiftToken) => subjectCounts[token.id] ?? 1;
 
   useEffect(() => {
     if (!showEnrollmentConfirmation) return;
+    const expiresAt = Date.now() + 30_000;
+    const interval = window.setInterval(() => {
+      const secondsRemaining = Math.max(
+        0,
+        Math.ceil((expiresAt - Date.now()) / 1000),
+      );
+      setConfirmationSecondsRemaining(secondsRemaining);
+      if (secondsRemaining === 0) setShowEnrollmentConfirmation(false);
+    }, 1000);
 
-    const timeout = window.setTimeout(
-      () => setShowEnrollmentConfirmation(false),
-      20_000,
-    );
-    return () => window.clearTimeout(timeout);
+    return () => window.clearInterval(interval);
   }, [showEnrollmentConfirmation]);
 
   return (
@@ -862,19 +872,47 @@ export function GiftTokenFees() {
             onClose={() => setEnrollOpen(false)}
             onDone={() => {
               setEnrollOpen(false);
+              setConfirmationSecondsRemaining(30);
               setShowEnrollmentConfirmation(true);
             }}
           />
         )}
       </Dialog>
       {showEnrollmentConfirmation && (
-        <div
-          role="status"
-          className="fixed bottom-5 left-1/2 z-[100] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 rounded-xl border border-brand-green/20 bg-card px-5 py-4 text-center text-sm leading-6 text-foreground shadow-xl"
-        >
-          You have successfully enrolled for the crash course. You will get your
-          login credentials after 12th of November. We will message you about
-          the payment confirmation within 24 hours.
+        <div className="fixed inset-0 z-[100] grid place-items-center bg-black/50 p-4 sm:p-6">
+          <div
+            className="max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-2xl border border-brand-green/20 bg-card px-5 py-7 text-center text-foreground shadow-2xl sm:px-8 sm:py-9"
+          >
+            <span
+              aria-hidden="true"
+              className="mx-auto flex size-20 items-center justify-center rounded-full bg-brand-green text-white sm:size-24"
+            >
+              <Check aria-hidden="true" size={52} strokeWidth={3} />
+            </span>
+            <h2
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              className="mt-5 text-xl font-bold tracking-tight sm:text-2xl"
+            >
+              Enrollment confirmed
+            </h2>
+            <p className="mt-3 text-sm leading-6 sm:text-base">
+              You have successfully enrolled for the crash course. You will get
+              your login credentials after 12th of November. We will message you
+              about the payment confirmation within 24 hours.
+            </p>
+            <p
+              aria-live="off"
+              className="mt-5 inline-flex items-center rounded-full bg-brand-green/10 px-4 py-2 text-sm font-semibold text-brand-green"
+            >
+              Closing in{" "}
+              <span className="mx-1 tabular-nums">
+                {confirmationSecondsRemaining}
+              </span>{" "}
+              seconds
+            </p>
+          </div>
         </div>
       )}
     </section>
