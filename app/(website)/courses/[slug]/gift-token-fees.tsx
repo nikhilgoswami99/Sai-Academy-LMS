@@ -126,16 +126,30 @@ const formatCurrency = (amount: number) =>
     maximumFractionDigits: 0,
   }).format(amount);
 
+function getDiscountRate(token: GiftToken, subjectCount: number) {
+  if (token.classes === "IX" || token.classes === "X") {
+    return subjectCount <= 3 ? 60 : 50;
+  }
+
+  if (token.classes === "XI" || token.classes === "XII") {
+    return subjectCount <= 2 ? 60 : 50;
+  }
+
+  return token.discount;
+}
+
 function calculateFee(token: GiftToken, subjectCount: number) {
   const chargeableSubjects = token.id >= 3 ? Math.min(subjectCount, 4) : subjectCount;
   const courseFee = chargeableSubjects * token.totalFee;
-  const total = courseFee * (token.discount / 100);
+  const discountRate = getDiscountRate(token, subjectCount);
+  const total = courseFee * (1 - discountRate / 100);
   const discountAmount = courseFee - total;
 
   return {
     courseFee,
     discountAmount,
     total,
+    discountRate,
   };
 }
 
@@ -146,7 +160,7 @@ function GiftTokenDetails({
   token: GiftToken;
   subjectCount: number;
 }) {
-  const { courseFee, discountAmount, total } = calculateFee(
+  const { courseFee, discountAmount, total, discountRate } = calculateFee(
     token,
     subjectCount,
   );
@@ -199,7 +213,7 @@ function GiftTokenDetails({
               <div className="inline-flex w-fit shrink-0 flex-col items-start rounded-xl bg-brand-green/10 px-3 py-2 text-left text-brand-green sm:items-end sm:self-auto sm:text-right">
                 <span className="inline-flex items-center gap-1.5 text-sm font-bold">
                   <BadgePercent aria-hidden="true" size={17} />
-                  {token.discount}% payable
+                  {100 - discountRate}% payable
                 </span>
                 <span className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-amber-800">
                   <span aria-hidden="true" className="text-sm leading-none">
@@ -760,7 +774,7 @@ export function GiftTokenFees() {
                   Class {token.classes}
                 </span>
                 <span className="rounded-full bg-brand-green/10 px-2.5 py-1 text-xs font-bold text-brand-green">
-                  {token.discount}% Discount
+                  {getDiscountRate(token, subjectCount)}% Discount
                 </span>
               </span>
               <span className="mt-1 block text-xs text-muted-foreground">
