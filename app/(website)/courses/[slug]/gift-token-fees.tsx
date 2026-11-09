@@ -126,22 +126,14 @@ const formatCurrency = (amount: number) =>
     maximumFractionDigits: 0,
   }).format(amount);
 
-function getDiscountRate(token: GiftToken, subjectCount: number) {
-  if (token.classes === "IX" || token.classes === "X") {
-    return subjectCount <= 3 ? 60 : 50;
-  }
-
-  if (token.classes === "XI" || token.classes === "XII") {
-    return subjectCount <= 2 ? 60 : 50;
-  }
-
+function getDiscountRate(token: GiftToken) {
   return token.discount;
 }
 
 function calculateFee(token: GiftToken, subjectCount: number) {
   const chargeableSubjects = token.id >= 3 ? Math.min(subjectCount, 4) : subjectCount;
   const courseFee = chargeableSubjects * token.totalFee;
-  const discountRate = getDiscountRate(token, subjectCount);
+  const discountRate = getDiscountRate(token);
   const total = courseFee * (1 - discountRate / 100);
   const discountAmount = courseFee - total;
 
@@ -774,7 +766,7 @@ export function GiftTokenFees() {
                   Class {token.classes}
                 </span>
                 <span className="rounded-full bg-brand-green/10 px-2.5 py-1 text-xs font-bold text-brand-green">
-                  {getDiscountRate(token, subjectCount)}% Discount
+                  {getDiscountRate(token)}% Discount
                 </span>
               </span>
               <span className="mt-1 block text-xs text-muted-foreground">
