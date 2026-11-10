@@ -28,10 +28,10 @@ export default function Home() {
                 Empowering students through quality education, dedicated guidance, and a commitment to academic excellence.
               </p>
               <div className="hero-reveal hero-reveal-delay-3 mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <Button nativeButton={false} size="lg" render={<Link href="/courses" />} className="h-12 rounded-md bg-brand-blue px-6 text-sm font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-brand-blue/90 hover:shadow-md focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2">
+                <Button nativeButton={false} size="lg" render={<Link href="/courses" />} className="h-12 rounded-md bg-brand-blue px-6 text-sm font-semibold text-white shadow-sm focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2">
                   Explore Courses <ArrowUpRight aria-hidden="true" size={16} />
                 </Button>
-                <Button nativeButton={false} variant="outline" size="lg" render={<Link href="/admissions" />} className="h-12 rounded-md border-brand-blue/40 bg-white/70 px-6 text-sm font-semibold text-brand-blue shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-brand-blue hover:bg-brand-blue hover:text-white hover:shadow-md focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2">
+                <Button nativeButton={false} variant="outline" size="lg" render={<Link href="/admissions" />} className="h-12 rounded-md border-brand-blue/40 bg-white/70 px-6 text-sm font-semibold text-brand-blue shadow-sm focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2">
                   Enquire Now
                 </Button>
               </div>
@@ -64,7 +64,7 @@ export default function Home() {
         </section>
 
         <section id="contact" className="scroll-mt-24 bg-brand-blue text-white">
-          <div className="mx-auto flex max-w-330 flex-col gap-8 px-5 py-16 sm:px-8 sm:py-20 md:flex-row md:items-end md:justify-between lg:px-12 lg:py-24"><div className="max-w-2xl"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/75">Admissions</p><h2 className="mt-4 text-4xl font-medium leading-tight tracking-tighter sm:text-5xl">Take the next step in your learning journey.</h2><p className="mt-4 max-w-xl text-sm leading-6 text-white/80">Talk with our team about admissions and find the right program for your student.</p></div><Button nativeButton={false} size="lg" render={<Link href="/admissions" />} className="h-12 shrink-0 rounded-md bg-white px-6 text-sm font-semibold text-brand-blue shadow-sm transition hover:-translate-y-0.5 hover:bg-white/90">Enquire now <ArrowUpRight aria-hidden="true" size={16} /></Button></div>
+          <div className="mx-auto flex max-w-330 flex-col gap-8 px-5 py-16 sm:px-8 sm:py-20 md:flex-row md:items-end md:justify-between lg:px-12 lg:py-24"><div className="max-w-2xl"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/75">Admissions</p><h2 className="mt-4 text-4xl font-medium leading-tight tracking-tighter sm:text-5xl">Take the next step in your learning journey.</h2><p className="mt-4 max-w-xl text-sm leading-6 text-white/80">Talk with our team about admissions and find the right program for your student.</p></div><Button nativeButton={false} size="lg" render={<Link href="/admissions" />} className="h-12 shrink-0 rounded-md bg-white px-6 text-sm font-semibold text-brand-blue shadow-sm">Enquire now <ArrowUpRight aria-hidden="true" size={16} /></Button></div>
         </section>
 
         <footer className="bg-primary text-primary-foreground">

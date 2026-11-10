@@ -43,7 +43,7 @@ const tokens = [
     feePerSubject: 1100,
     totalFee: 1100 * 5,
     discount: 50,
-    payment: "2 monthly payments",
+    payment: "One-time payment",
     includes: [
       "Crash course access",
       "Weekly revision sessions",
@@ -57,7 +57,7 @@ const tokens = [
     feePerSubject: 750,
     totalFee: 750 * 4,
     discount: 50,
-    payment: "3 monthly payments",
+    payment: "One-time payment",
     includes: [
       "Crash course access",
       "Small-group classes",
@@ -71,7 +71,7 @@ const tokens = [
     feePerSubject: 750,
     totalFee: 750 * 5,
     discount: 50,
-    payment: "4 monthly payments",
+    payment: "One-time payment",
     includes: [
       "Crash course access",
       "Small-group classes",
@@ -85,7 +85,7 @@ const tokens = [
     feePerSubject: 750,
     totalFee: 750 * 5,
     discount: 50,
-    payment: "5 monthly payments",
+    payment: "One-time payment",
     includes: [
       "Crash course access",
       "Small-group classes",
@@ -99,7 +99,7 @@ const tokens = [
     feePerSubject: 625,
     totalFee: 625 * 5,
     discount: 50,
-    payment: "Flexible payment plan",
+    payment: "One-time payment",
     includes: [
       "Full crash course access",
       "Small-group classes",
@@ -303,6 +303,14 @@ function GiftTokenDetails({
     </DialogContent>
   );
 }
+
+
+
+
+
+
+
+
 
 function EnrollStepDialog({
   token,
@@ -836,7 +844,7 @@ export function GiftTokenFees() {
                   photocopy amount separately at the office.
                 </p>
                 <p>
-                  2. ARK course students pay A+ fees of ₹100 per subject separately at the office.
+                  2. ARK course students pay A+ fees of ₹100 per subject for 2 months separately at the office.
                 </p>
                 <p>
                   3. New Students will have to pay RS 100 registration fee at the office.

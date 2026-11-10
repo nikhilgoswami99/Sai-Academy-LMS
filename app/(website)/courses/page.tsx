@@ -31,10 +31,9 @@ export default function CoursesPage() {
           <div className="mt-7 flex flex-wrap gap-3">
             <Button
               nativeButton={false}
-              variant="outline"
               size="lg"
               render={<Link href="/courses/crash-course" />}
-              className="h-12 rounded-md border-brand-blue/40 px-6 text-sm font-semibold text-brand-blue transition duration-200 hover:-translate-y-0.5 hover:border-brand-blue hover:bg-brand-blue hover:text-white"
+              className="h-12 rounded-md px-6 text-sm font-semibold"
             >
               Details
             </Button>
