@@ -84,7 +84,7 @@ export function EditStudentDialog({ open, onOpenChange, student }: { open: boole
           {fields.map(({ name, label, type = "text" }) => <div className="space-y-1.5" key={name}>
             <label className="text-sm font-medium" htmlFor={`edit-student-${name}`}>{label}</label>
             <Input id={`edit-student-${name}`} type={type} min={type === "number" ? 0 : undefined} max={type === "number" ? 100 : undefined} step={type === "number" ? "0.01" : undefined} required={name === "fullName" || name === "studentContact" || name === "schoolName"} value={values[name]} onChange={(event) => setValues((current) => current ? { ...current, [name]: event.target.value } : current)} />
-            {name === "studentContact" && <p className="text-xs text-muted-foreground">Changing this also updates the student&apos;s login phone. The password remains unchanged.</p>}
+            {name === "studentContact" && <p className="text-xs text-muted-foreground">Changing this updates the student&apos;s contact details. The current login password remains unchanged.</p>}
           </div>)}
         </div>
         {message && <p className="text-sm text-destructive" role="alert">{message}</p>}

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { AppShell } from "@/components/layout/appShell";
 import { StudentAccountProvider } from "@/components/students/studentPages";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
 type Row = Record<string, unknown>;
@@ -21,32 +22,36 @@ export default async function StudentLayout({ children }: { children: ReactNode 
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error || !user) redirect("/");
 
-  const { data: assignments, error: assignmentError } = await supabase
+  // Authenticated table reads here can be hidden by RLS even after login has
+  // verified the student with the Admin API. Keep this lookup server-side and
+  // explicitly authorize the session before loading the dashboard data.
+  const admin = createAdminClient();
+  const { data: assignments, error: assignmentError } = await admin
     .from("user_roles").select("role_id").eq("user_id", user.id);
   if (assignmentError || !assignments?.length) redirect("/");
-  const { data: roles, error: roleError } = await supabase
+  const { data: roles, error: roleError } = await admin
     .from("roles").select("name").in("id", assignments.map(({ role_id }) => role_id));
   if (roleError || !roles?.some(({ name }) => name === "student")) redirect("/");
 
   const [{ data: profile }, { data: studentData, error: studentError }, { data: currentYears, error: yearsError }] = await Promise.all([
-    supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
-    supabase.from("students").select("*").eq("profile_id", user.id).maybeSingle(),
-    supabase.from("academic_years").select("*").eq("is_current", true),
+    admin.from("profiles").select("*").eq("id", user.id).maybeSingle(),
+    admin.from("students").select("*").eq("profile_id", user.id).maybeSingle(),
+    admin.from("academic_years").select("*").eq("is_current", true),
   ]);
   if (!profile || profile.status !== "active" || studentError || !studentData || yearsError || !currentYears?.length) redirect("/");
 
   const student = studentData as Row;
   const currentYearIds = currentYears.map(({ id }) => id);
-  const { data: enrollments, error: enrollmentError } = await supabase
+  const { data: enrollments, error: enrollmentError } = await admin
     .from("student_enrollments").select("*").eq("student_id", student.id).in("academic_year_id", currentYearIds);
   const enrollment = (enrollments as Row[] | null)?.find((item) => String(item.status ?? "active").toLowerCase() === "active");
   if (enrollmentError || !enrollment) redirect("/");
 
   const currentYear = (currentYears as Row[]).find(({ id }) => id === enrollment.academic_year_id) as Row | undefined;
   const [classResult, boardResult, courseEnrollmentsResult] = await Promise.all([
-    enrollment.class_id ? supabase.from("classes").select("*").eq("id", enrollment.class_id).maybeSingle() : Promise.resolve({ data: null }),
-    enrollment.board_id ? supabase.from("boards").select("*").eq("id", enrollment.board_id).maybeSingle() : Promise.resolve({ data: null }),
-    supabase.from("course_enrollments").select("*"),
+    enrollment.class_id ? admin.from("classes").select("*").eq("id", enrollment.class_id).maybeSingle() : Promise.resolve({ data: null }),
+    enrollment.board_id ? admin.from("boards").select("*").eq("id", enrollment.board_id).maybeSingle() : Promise.resolve({ data: null }),
+    admin.from("course_enrollments").select("*").eq("student_id", student.id),
   ]);
   const courseEnrollments = (courseEnrollmentsResult.data as Row[] | null) ?? [];
   const courseEnrollment = courseEnrollments.find((row) =>
@@ -54,14 +59,14 @@ export default async function StudentLayout({ children }: { children: ReactNode 
   );
   const courseId = courseEnrollment?.course_id ?? enrollment.course_id;
   const { data: course } = courseId
-    ? await supabase.from("courses").select("*").eq("id", courseId).maybeSingle()
+    ? await admin.from("courses").select("*").eq("id", courseId).maybeSingle()
     : { data: null };
 
   const name = value(student, "full_name", "name", "student_name") || value(profile as Row, "display_name", "full_name", "name") || "Student";
   const avatar = value(student, "profile_picture_url") || value(profile as Row, "avatar_url", "profile_picture", "photo_url");
   const personalFields = ["date_of_birth", "profile_picture_url", "father_name", "mother_name", "parent_occupation", "parent_education", "parent_contact", "email", "address"] as const;
   const personalProfile = Object.fromEntries(personalFields.map((field) => [field, student[field] == null ? "" : String(student[field])]));
-  personalProfile.email ||= user.email ?? "";
+  // Auth email is an internal login identifier and must never be sent to the browser.
   const academic = {
     rollNumber: value(enrollment as Row, "roll_number", "student_roll_number"),
     className: relatedLabel(classResult.data as Row | null, "name", "class_name", "code", "label"),
@@ -74,5 +79,5 @@ export default async function StudentLayout({ children }: { children: ReactNode 
     enrollmentStatus: value(enrollment as Row, "status") || "Active",
   };
 
-  return <AppShell role="student"><StudentAccountProvider name={name} avatar={avatar} email={user.email ?? ""} studentContact={value(student, "student_contact", "phone", "contact")} personalProfile={personalProfile} academic={academic}>{children}</StudentAccountProvider></AppShell>;
+  return <AppShell role="student"><StudentAccountProvider name={name} avatar={avatar} email="" studentContact={value(student, "student_contact", "phone", "contact")} personalProfile={personalProfile} academic={academic}>{children}</StudentAccountProvider></AppShell>;
 }

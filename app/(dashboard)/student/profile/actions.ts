@@ -57,3 +57,37 @@ export async function updateStudentPersonalProfile(input: unknown) {
     return { success: false as const, message: "Your profile could not be saved. Please try again." };
   }
 }
+
+export async function changeStudentPassword(input: unknown) {
+  if (!input || typeof input !== "object" || !("password" in input) || typeof input.password !== "string") {
+    return { success: false as const, message: "Enter a valid new password." };
+  }
+  const password = input.password;
+  if (password.length < 8 || password.length > 1024) {
+    return { success: false as const, message: "Your password must be at least 8 characters long." };
+  }
+
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) return { success: false as const, message: "Sign in to change your password." };
+
+    const admin = createAdminClient();
+    const { data: profile, error: profileError } = await admin.from("profiles").select("status").eq("id", user.id).maybeSingle();
+    const { data: assignments, error: assignmentError } = await admin.from("user_roles").select("role_id").eq("user_id", user.id);
+    if (profileError || assignmentError || profile?.status !== "active" || !assignments?.length) {
+      return { success: false as const, message: "This account is not authorized to change a student password." };
+    }
+    const { data: roles, error: rolesError } = await admin.from("roles").select("name").in("id", assignments.map(({ role_id }) => role_id));
+    if (rolesError || !roles?.some(({ name }) => name === "student")) {
+      return { success: false as const, message: "This account is not authorized to change a student password." };
+    }
+
+    const { error: updateError } = await supabase.auth.updateUser({ password });
+    if (updateError) return { success: false as const, message: "Your password could not be changed. Please try again." };
+    revalidatePath("/student/profile");
+    return { success: true as const };
+  } catch {
+    return { success: false as const, message: "Your password could not be changed. Please try again." };
+  }
+}

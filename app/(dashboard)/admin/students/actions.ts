@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSuperAdminContext } from "@/lib/auth/super-admin";
 import { studentAdminUpdateSchema, studentAdmissionSchema } from "@/lib/validation/student";
+import { getStudentAuthEmail, migrateStudentAuthProfile } from "@/lib/auth/student-auth-migration.mjs";
 
 export type AdmissionOption = { id: string; label: string };
 export type StudentAdmissionOptionsResult =
@@ -271,7 +272,6 @@ export async function updateAdminStudent(studentIdInput: unknown, submitted: unk
   if (!parsed.success) return { success: false as const, message: "Check the student details and try again.", fieldErrors: parsed.error.flatten().fieldErrors };
 
   try {
-    const admin = auth.admin;
     const { data: studentData, error: studentError } = await auth.supabase.from("students").select("*").eq("id", studentIdInput).maybeSingle();
     if (studentError || !studentData) return { success: false as const, message: "Student record could not be found." };
     const student = studentData as Row;
@@ -303,21 +303,8 @@ export async function updateAdminStudent(studentIdInput: unknown, submitted: unk
     if (!contactColumn) return { success: false as const, message: "The student contact column is not available in the current database schema." };
     updates[contactColumn] = values.studentContact;
 
-    const previousContact = String(student[contactColumn] ?? "");
-    const contactChanged = previousContact !== values.studentContact;
-    if (contactChanged) {
-      const { error: phoneError } = await admin.auth.admin.updateUserById(profileId, {
-        phone: values.studentContact,
-        phone_confirm: true,
-      });
-      if (phoneError) return { success: false as const, message: "The login phone could not be updated. Check that the new number is valid and not already used." };
-    }
-
     const { error: updateError } = await auth.supabase.from("students").update(updates).eq("id", studentIdInput);
     if (updateError) {
-      if (contactChanged && previousContact) {
-        await admin.auth.admin.updateUserById(profileId, { phone: previousContact, phone_confirm: true });
-      }
       return { success: false as const, message: "Student details could not be saved. No academic enrollment history was changed." };
     }
 
@@ -345,6 +332,69 @@ export async function setAdminStudentActive(studentIdInput: unknown, active: unk
     return { success: true as const };
   } catch {
     return { success: false as const, message: "Account status could not be updated. Check the Supabase server configuration and try again." };
+  }
+}
+
+export type StudentAuthMigrationResult = {
+  success: boolean;
+  dryRun: boolean;
+  eligible: number;
+  alreadyMigrated: number;
+  migrated: number;
+  conflicts: number;
+  failed: number;
+  message?: string;
+};
+
+/** Super-admin-only, repeatable migration. Defaults to dry-run. */
+export async function migrateStudentAuthEmails(dryRunInput: unknown = true): Promise<StudentAuthMigrationResult> {
+  const auth = await getAuthorizedAdminClient();
+  const dryRun = dryRunInput !== false;
+  const empty = { success: false, dryRun, eligible: 0, alreadyMigrated: 0, migrated: 0, conflicts: 0, failed: 0 };
+  if (!auth.success) return { ...empty, message: auth.message };
+
+  try {
+    const { data: students, error: studentsError } = await auth.admin.from("students").select("profile_id");
+    if (studentsError || !students) return { ...empty, message: "Student accounts could not be loaded for migration." };
+
+    const profileIds = [...new Set(students.flatMap((row) => typeof row.profile_id === "string" ? [row.profile_id] : []))];
+    const usersByEmail = new Map<string, string>();
+    for (let page = 1; ; page += 1) {
+      const { data, error } = await auth.admin.auth.admin.listUsers({ page, perPage: 1000 });
+      if (error || !data?.users) return { ...empty, message: "Auth identities could not be checked for email collisions." };
+      for (const user of data.users) if (user.email) usersByEmail.set(user.email.toLowerCase(), user.id);
+      if (data.users.length < 1000) break;
+    }
+
+    let eligible = 0;
+    let alreadyMigrated = 0;
+    let migrated = 0;
+    let conflicts = 0;
+    let failed = 0;
+    for (const profileId of profileIds) {
+      if (dryRun) {
+        const { data, error } = await auth.admin.auth.admin.getUserById(profileId);
+        const user = data?.user;
+        const targetEmail = getStudentAuthEmail(profileId);
+        if (error || !user || user.id !== profileId) { failed += 1; continue; }
+        const owner = usersByEmail.get(targetEmail.toLowerCase());
+        if (owner && owner !== profileId) { conflicts += 1; continue; }
+        if (user.email?.toLowerCase() === targetEmail.toLowerCase() && user.email_confirmed_at) alreadyMigrated += 1;
+        else eligible += 1;
+        continue;
+      }
+
+      const result = await migrateStudentAuthProfile(auth.admin, profileId, usersByEmail);
+      if (result.status === "migrated") migrated += 1;
+      else if (result.status === "already_migrated") alreadyMigrated += 1;
+      else if (result.status === "conflict") conflicts += 1;
+      else failed += 1;
+    }
+
+    revalidatePath("/admin/students");
+    return { success: failed === 0 && conflicts === 0, dryRun, eligible, alreadyMigrated, migrated, conflicts, failed };
+  } catch {
+    return { ...empty, message: "Student Auth migration could not be completed. Check the server configuration and review Auth identities before retrying." };
   }
 }
 
@@ -414,15 +464,32 @@ export async function createStudentAdmission(submitted: unknown): Promise<Create
       return { success: false, code: "options_unavailable", message: "No active Crash Course was found. No account was created." };
     }
 
+    const temporaryEmail = `provision.${crypto.randomUUID()}@login.saiacademy.com`;
     const { data: authData, error: authError } = await admin.auth.admin.createUser({
-      phone: admission.studentContact,
-      phone_confirm: true,
+      email: temporaryEmail,
+      email_confirm: true,
       password: admission.studentContact,
     });
     if (authError || !authData.user) {
-      return { success: false, code: "auth_creation_failed", message: "The student phone account could not be created. Check that this contact number is unique and try again." };
+      return { success: false, code: "auth_creation_failed", message: "The student login account could not be created. Check that email/password authentication is enabled and try again." };
     }
     authUserId = authData.user.id;
+
+    const { error: emailError } = await admin.auth.admin.updateUserById(authUserId, {
+      email: getStudentAuthEmail(authUserId),
+      email_confirm: true,
+    });
+    if (emailError) {
+      const cleanupSucceeded = await removeCreatedAuthUser(admin, authUserId);
+      authUserId = null;
+      return {
+        success: false,
+        code: "auth_creation_failed",
+        message: cleanupSucceeded
+          ? "The student login identity could not be configured. No account was retained; check the internal email domain and try again."
+          : "The student login identity could not be configured and its unused account could not be removed. Contact the academy administrator.",
+      };
+    }
 
     rpcStarted = true;
     const { data: rpcData, error: rpcError, status: rpcStatus } = await admin.rpc("create_student_admission", {

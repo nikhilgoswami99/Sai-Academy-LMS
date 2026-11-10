@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ArrowUpRight, BookOpen, ClipboardCheck, FileText, GraduationCap, UserRound } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/pageHeader";
 import { StudentPersonalProfileForm } from "@/components/students/studentPersonalProfileForm";
+import { StudentPasswordForm } from "@/components/students/studentPasswordForm";
 import type { StudentPersonalProfile } from "@/lib/validation/student";
 
 type AcademicSummary = {
@@ -101,6 +102,7 @@ export function StudentPage() {
       <div className="grid gap-5 lg:grid-cols-2">
         <Panel><h2 className="mb-4 text-base font-semibold">Academic information · managed by the academy</h2><div className="grid gap-3 sm:grid-cols-2"><Info label="Student name" value={name} /><Info label="Generated roll number" value={academic.rollNumber} /><Info label="Class" value={academic.className} /><Info label="Board" value={academic.boardName} /><Info label="School" value={academic.schoolName} /><Info label="Academic year" value={academic.academicYear} /><Info label="Admission date" value={academic.admissionDate} /><Info label="Learning mode" value={academic.learningMode} /><Info label="Course" value={academic.courseName} /></div></Panel>
         <Panel><div className="mb-5 flex items-center gap-3 rounded-xl bg-muted/60 p-4"><div className="flex size-12 items-center justify-center overflow-hidden rounded-full bg-secondary text-primary">{avatar ? <img src={avatar} alt="Profile" className="size-full object-cover" /> : <UserRound className="size-5" />}</div><div><p className="text-sm font-semibold">{name}</p><p className="text-xs text-muted-foreground">Personal information</p></div></div><div className="mb-5"><Info label="Student contact · managed by the academy" value={studentContact} /></div><StudentPersonalProfileForm initialValues={profileValues} /></Panel>
+        <Panel><h2 className="mb-4 font-semibold">Password</h2><StudentPasswordForm /></Panel>
       </div>
       <Link href="/student" className="inline-flex text-sm font-medium text-primary hover:underline">Complete later and return to dashboard</Link>
     </>}

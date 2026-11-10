@@ -2,6 +2,7 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { getStudentAuthEmail } from "@/lib/auth/student-auth-migration.mjs";
 
 export type LoginResult =
   | { success: true; redirectTo: "/admin" | "/student" }
@@ -140,26 +141,24 @@ async function signInWithRollNumber(
   if (!roles?.includes("student"))
     return { success: false, message: genericLoginFailure };
 
-  // Read phone from the linked auth.users identity, never from browser input
-  // or the student_contact field.
+  // Resolve the internal email from the linked Auth identity, never from
+  // browser input or the student_contact field.
   const { data: authResult, error: authLookupError } =
     await admin.auth.admin.getUserById(student.profileId);
   const authUser = authResult?.user;
-  const authPhone = authUser?.phone;
+  const authEmail = authUser?.email;
   if (
     authLookupError ||
     !authUser ||
     authUser.id !== student.profileId ||
-    !authPhone
+    !authEmail ||
+    authEmail !== getStudentAuthEmail(student.profileId)
   ) {
     return { success: false, message: genericLoginFailure };
   }
 
   const { data: signedIn, error: signInError } =
-    await supabase.auth.signInWithPassword({
-      phone: authPhone,
-      password,
-    });
+    await supabase.auth.signInWithPassword({ email: authEmail, password });
   if (signInError || !signedIn.user || signedIn.user.id !== student.profileId) {
     await supabase.auth.signOut();
     return { success: false, message: genericLoginFailure };
