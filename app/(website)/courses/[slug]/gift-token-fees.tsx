@@ -127,7 +127,8 @@ const formatCurrency = (amount: number) =>
   }).format(amount);
 
 function getDiscountRate(token: GiftToken, subjectCount: number) {
-  if (token.id <= 2) return subjectCount === 1 ? 40 : 50;
+  if (token.id === 1) return 50;
+  if (token.id === 2) return subjectCount === 1 ? 40 : 50;
   if (token.id <= 4) return subjectCount <= 2 ? 40 : 50;
   return token.discount;
 }
