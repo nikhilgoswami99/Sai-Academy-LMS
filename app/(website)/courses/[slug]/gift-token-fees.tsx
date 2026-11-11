@@ -26,8 +26,8 @@ const tokens = [
     id: 1,
     classes: "XII",
     months: 4,
-    feePerSubject: 1100,
-    totalFee: 1100 * 4,
+    feePerSubject: 1200,
+    totalFee: 1200 * 4,
     discount: 50,
     payment: "One-time payment",
     includes: [
@@ -40,8 +40,8 @@ const tokens = [
     id: 2,
     classes: "XI",
     months: 5,
-    feePerSubject: 1100,
-    totalFee: 1100 * 5,
+    feePerSubject: 1200,
+    totalFee: 1200 * 5,
     discount: 50,
     payment: "One-time payment",
     includes: [
@@ -54,8 +54,8 @@ const tokens = [
     id: 3,
     classes: "X",
     months: 4,
-    feePerSubject: 750,
-    totalFee: 750 * 4,
+    feePerSubject: 800,
+    totalFee: 800 * 4,
     discount: 50,
     payment: "One-time payment",
     includes: [
@@ -68,8 +68,8 @@ const tokens = [
     id: 4,
     classes: "IX",
     months: 5,
-    feePerSubject: 750,
-    totalFee: 750 * 5,
+    feePerSubject: 800,
+    totalFee: 800 * 5,
     discount: 50,
     payment: "One-time payment",
     includes: [
@@ -126,22 +126,26 @@ const formatCurrency = (amount: number) =>
     maximumFractionDigits: 0,
   }).format(amount);
 
-function getDiscountRate(token: GiftToken) {
+function getDiscountRate(token: GiftToken, subjectCount: number) {
+  if (token.id <= 2) return subjectCount === 1 ? 40 : 50;
+  if (token.id <= 4) return subjectCount <= 2 ? 40 : 50;
   return token.discount;
 }
 
 function calculateFee(token: GiftToken, subjectCount: number) {
   const chargeableSubjects = token.id >= 3 ? Math.min(subjectCount, 4) : subjectCount;
   const courseFee = chargeableSubjects * token.totalFee;
-  const discountRate = getDiscountRate(token);
-  const total = courseFee * (1 - discountRate / 100);
-  const discountAmount = courseFee - total;
+  const discountRate = getDiscountRate(token, subjectCount);
+  const discountAmount = courseFee * (discountRate / 100);
+  const lateFee = token.id >= 5 ? 100 : 0;
+  const total = courseFee - discountAmount + lateFee;
 
   return {
     courseFee,
     discountAmount,
     total,
     discountRate,
+    lateFee,
   };
 }
 
@@ -152,7 +156,7 @@ function GiftTokenDetails({
   token: GiftToken;
   subjectCount: number;
 }) {
-  const { courseFee, discountAmount, total, discountRate } = calculateFee(
+  const { courseFee, discountAmount, total, discountRate, lateFee } = calculateFee(
     token,
     subjectCount,
   );
@@ -177,7 +181,7 @@ function GiftTokenDetails({
           <div className="relative pr-8">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold tracking-wide text-white/90">
               <Sparkles aria-hidden="true" size={14} />
-              Gift Token 1 • Crash Course
+              Gift Token 2 • Crash Course
             </span>
             <DialogHeader className="mt-4 gap-2 text-left">
               <DialogTitle className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
@@ -208,13 +212,11 @@ function GiftTokenDetails({
                   {100 - discountRate}% payable
                 </span>
                 <span className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-amber-800">
-                  <span aria-hidden="true" className="text-sm leading-none">
-                    🪔
-                  </span>
-                  Diwali Offer
+                  <Gift aria-hidden="true" size={14} />
+                  Children’s Day Offer
                 </span>
                 <span className="mt-1 text-[12px] leading-4">
-                  Applicable till 11th of November 2026
+                  Valid 12th–16th November 2026
                 </span>
               </div>
             </div>
@@ -243,6 +245,12 @@ function GiftTokenDetails({
                   −{formatCurrency(discountAmount)}
                 </span>
               </div>
+              {lateFee > 0 && (
+                <div className="flex flex-col gap-1 text-muted-foreground sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                  <span>Late fee</span>
+                  <span className="font-medium text-foreground">{formatCurrency(lateFee)}</span>
+                </div>
+              )}
               <div className="flex flex-col gap-1 border-t border-border/70 pt-3 font-semibold text-foreground sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <span>Fees to pay</span>
                 <span>{formatCurrency(total)}</span>
@@ -718,25 +726,25 @@ export function GiftTokenFees() {
         </h2>
         <div className="mt-1 flex flex-wrap items-center gap-2.5">
           <h3 className="text-base font-semibold tracking-tight text-brand-red sm:text-lg">
-            Gift Token 1
+            Gift Token 2
           </h3>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-amber-800">
-            <span aria-hidden="true" className="text-sm leading-none">
-              🪔
-            </span>
-            Diwali Offer
+            <Gift aria-hidden="true" size={14} />
+            Children’s Day Offer
           </span>
         </div>
         <p className="mt-3 text-sm leading-6 text-muted-foreground sm:text-base">
-          Available from 6th Nov to 11th Nov. Select a class group to view its
-          fee details.
+          Select a class group to view the Children’s Day offer fee details.
         </p>
       </div>
 
       <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
         {tokens.map((token, index) => {
           const subjectCount = getSubjectCount(token);
-          const { courseFee, total } = calculateFee(token, subjectCount);
+          const { courseFee, total, discountRate, lateFee } = calculateFee(
+            token,
+            subjectCount,
+          );
 
           return (
             <article
@@ -760,21 +768,19 @@ export function GiftTokenFees() {
                 <Gift aria-hidden="true" size={20} />
               </span>
               <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-amber-800">
-                <span aria-hidden="true" className="text-sm leading-none">
-                  🪔
-                </span>
-                Diwali Offer
+                <Gift aria-hidden="true" size={14} />
+                Children’s Day Offer
               </span>
               <span className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                 <CalendarDays aria-hidden="true" size={13} />
-                6th Nov – 11th Nov
+                12th–16th November 2026
               </span>
               <span className="mt-3 flex flex-wrap items-start justify-between gap-2">
                 <span className="text-lg font-bold tracking-tight">
                   Class {token.classes}
                 </span>
                 <span className="rounded-full bg-brand-green/10 px-2.5 py-1 text-xs font-bold text-brand-green">
-                  {getDiscountRate(token)}% Discount
+                  {discountRate}% Discount
                 </span>
               </span>
               <span className="mt-1 block text-xs text-muted-foreground">
@@ -838,6 +844,11 @@ export function GiftTokenFees() {
                   </span>
                 </div>
               </div>
+              {lateFee > 0 && (
+                <p className="mt-2 text-xs font-medium text-muted-foreground">
+                  Includes ₹100 late fee.
+                </p>
+              )}
               <div className="mt-3 space-y-1 rounded-lg border border-amber-200 bg-amber-50/70 px-3 py-2.5 text-[11px] leading-4 text-muted-foreground sm:text-xs sm:leading-5">
                 <p>
                   Note:- <br /> 1. ARK course students pay ₹100 per student as
@@ -880,7 +891,7 @@ export function GiftTokenFees() {
       </div>
 
       <p className="mt-8 rounded-xl border border-border bg-secondary/60 px-5 py-4 text-center text-sm font-medium leading-6 text-foreground">
-        Gift Token 2 will start from 12th November with increased fees.
+        Children’s Day Offer under Gift Token 2 is valid from 12th to 16th November 2026.
       </p>
 
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>

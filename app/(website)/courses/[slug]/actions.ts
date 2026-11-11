@@ -36,8 +36,8 @@ export async function saveEnrollmentRequest(input: unknown) {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         ...parsed.data,
-        // All six class cards are part of Gift Token 1.
-        tokenId: 1,
+        // All six class cards are part of Gift Token 2.
+        tokenId: 2,
         paymentStatus: "Pending",
         submittedAt: new Date().toISOString(),
         secret,
