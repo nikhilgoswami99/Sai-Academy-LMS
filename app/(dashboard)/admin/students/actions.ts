@@ -181,14 +181,14 @@ export async function getAdminStudents(): Promise<AdminStudentListResult> {
 
   try {
     const [studentsResult, enrollmentsResult, yearsResult, classesResult, boardsResult, coursesResult, courseEnrollmentsResult, profilesResult] = await Promise.all([
-      auth.supabase.from("students").select("*"),
-      auth.supabase.from("student_enrollments").select("*"),
-      auth.supabase.from("academic_years").select("*"),
-      auth.supabase.from("classes").select("*"),
-      auth.supabase.from("boards").select("*"),
-      auth.supabase.from("courses").select("*"),
-      auth.supabase.from("course_enrollments").select("*"),
-      auth.supabase.from("profiles").select("id,status"),
+      auth.admin.from("students").select("*"),
+      auth.admin.from("student_enrollments").select("*"),
+      auth.admin.from("academic_years").select("*"),
+      auth.admin.from("classes").select("*"),
+      auth.admin.from("boards").select("*"),
+      auth.admin.from("courses").select("*"),
+      auth.admin.from("course_enrollments").select("*"),
+      auth.admin.from("profiles").select("id,status"),
     ]);
     if (studentsResult.error || enrollmentsResult.error || yearsResult.error) {
       return { success: false, message: "Student records could not be loaded from Supabase. Check the server key and table access, then try again." };
@@ -247,7 +247,7 @@ export async function getAdminDashboardSummary(): Promise<AdminDashboardSummary>
   }
   let activeTeachers: number | null = null;
   try {
-    const { data, error } = await auth.supabase.from("teachers").select("*");
+    const { data, error } = await auth.admin.from("teachers").select("*");
     if (!error) activeTeachers = asRows(data).filter((row) => row.is_active === true || row.active === true || String(row.status ?? "").toLowerCase() === "active").length;
   } catch {
     activeTeachers = null;

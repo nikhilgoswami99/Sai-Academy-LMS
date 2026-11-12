@@ -173,7 +173,8 @@ export default function CoursesPage() {
                       </li>
                       <li>
                         <span className="font-medium">A-Batch:</span> 2hrs
-                        classes
+                        classes(After qualifying
+ CCET)
                       </li>
                     </ul>
                   </td>

@@ -689,6 +689,7 @@ export function GiftTokenFees() {
   const [enrollOpen, setEnrollOpen] = useState(false);
   const [enrollToken, setEnrollToken] = useState<GiftToken>(tokens[0]);
   const [enrollSubjectCount, setEnrollSubjectCount] = useState(1);
+  const [subjectValidationTokenId, setSubjectValidationTokenId] = useState<number | null>(null);
   const [showEnrollmentConfirmation, setShowEnrollmentConfirmation] =
     useState(false);
   const [confirmationSecondsRemaining, setConfirmationSecondsRemaining] =
@@ -797,10 +798,16 @@ export function GiftTokenFees() {
                 id={`subjects-${token.id}`}
                 value={subjectCount}
                 onChange={(event) =>
-                  setSubjectCounts((current) => ({
-                    ...current,
-                    [token.id]: Number(event.target.value),
-                  }))
+                  {
+                    const count = Number(event.target.value);
+                    setSubjectCounts((current) => ({
+                      ...current,
+                      [token.id]: count,
+                    }));
+                    setSubjectValidationTokenId(
+                      token.id >= 3 && count < 2 ? token.id : null,
+                    );
+                  }
                 }
                 className="mt-1 h-10 w-full cursor-pointer rounded-md border border-border bg-card px-3 text-sm font-medium text-foreground outline-none transition focus-visible:border-brand-blue focus-visible:ring-2 focus-visible:ring-brand-blue/30"
               >
@@ -812,6 +819,11 @@ export function GiftTokenFees() {
                   ),
                 )}
               </select>
+              {token.id >= 3 && subjectCount < 2 && subjectValidationTokenId === token.id && (
+                <p role="alert" className="mt-2 text-sm font-medium text-destructive">
+                  Enroll for minimum 2 subjects
+                </p>
+              )}
               {token.id === 3 || token.id === 4 ? (
                 <p className="mt-2 rounded-lg border border-brand-green/20 bg-brand-green/5 px-3 py-2 text-xs leading-5 text-muted-foreground">
                   Note: Hindi and AI are free for Classes IX and X.
@@ -877,6 +889,10 @@ export function GiftTokenFees() {
                 <button
                   type="button"
                   onClick={() => {
+                    if (token.id >= 3 && subjectCount < 2) {
+                      setSubjectValidationTokenId(token.id);
+                      return;
+                    }
                     setEnrollToken(token);
                     setEnrollSubjectCount(subjectCount);
                     setEnrollOpen(true);

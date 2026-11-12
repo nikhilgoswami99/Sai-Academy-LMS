@@ -24,6 +24,23 @@ export async function saveEnrollmentRequest(input: unknown) {
     return { success: false as const, message: "Please check the student details and try again." };
   }
 
+  const classNumberByRoman: Record<string, number> = {
+    III: 3,
+    IV: 4,
+    V: 5,
+    VI: 6,
+    VII: 7,
+    VIII: 8,
+    IX: 9,
+    X: 10,
+    XI: 11,
+    XII: 12,
+  };
+  const classNumber = classNumberByRoman[parsed.data.classGroup.toUpperCase()];
+  if (classNumber !== undefined && classNumber <= 10 && parsed.data.subjectCount < 2) {
+    return { success: false as const, message: "Enroll for minimum 2 subjects" };
+  }
+
   const endpoint = process.env.GOOGLE_SHEETS_WEB_APP_URL;
   const secret = process.env.GOOGLE_SHEETS_SHARED_SECRET;
   if (!endpoint || !secret) {
