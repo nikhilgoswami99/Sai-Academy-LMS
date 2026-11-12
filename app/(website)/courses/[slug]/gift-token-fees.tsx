@@ -128,7 +128,7 @@ const formatCurrency = (amount: number) =>
 
 function getDiscountRate(token: GiftToken, subjectCount: number) {
   if (token.id === 1) return 50;
-  if (token.id === 2) return subjectCount === 1 ? 40 : 50;
+  if (token.id === 2) return 50;
   if (token.id <= 4) return subjectCount <= 2 ? 40 : 50;
   return token.discount;
 }
@@ -877,6 +877,7 @@ export function GiftTokenFees() {
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
                   type="button"
+                  disabled={token.id >= 3 && subjectCount < 2}
                   onClick={() => {
                     setSelectedToken(token);
                     setDetailsOpen(true);
@@ -897,7 +898,7 @@ export function GiftTokenFees() {
                     setEnrollSubjectCount(subjectCount);
                     setEnrollOpen(true);
                   }}
-                  className="inline-flex min-h-10 flex-1 items-center justify-center rounded-md bg-brand-red px-3 text-xs font-semibold uppercase tracking-[0.08em] text-white shadow-sm transition-colors hover:bg-brand-red/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2 sm:flex-none sm:px-4 sm:tracking-[0.12em]"
+                  className="inline-flex min-h-10 flex-1 items-center justify-center rounded-md bg-brand-red px-3 text-xs font-semibold uppercase tracking-[0.08em] text-white shadow-sm transition-colors hover:bg-brand-red/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-red focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none sm:px-4 sm:tracking-[0.12em]"
                 >
                   Enroll Now
                 </button>
