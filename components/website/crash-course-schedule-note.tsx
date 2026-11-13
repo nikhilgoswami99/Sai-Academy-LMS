@@ -38,7 +38,7 @@ export function CrashCourseScheduleNote({
           id="crash-course-schedule-title"
           className="mt-2 text-xl font-bold tracking-tight text-brand-blue sm:text-2xl"
         >
-          Crash course classes start soon
+          Crash course classes starting soon
         </h2>
 
         <div
