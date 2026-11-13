@@ -62,7 +62,7 @@ export function CrashCourseScheduleWidget({
       >
         <CalendarDays aria-hidden="true" className="size-4 sm:size-[17px]" />
         <span className="sm:hidden">Course dates</span>
-        <span className="hidden sm:inline">Crash course dates</span>
+        <span className="hidden sm:inline">Crash Course Schedule</span>
         <span className="crash-schedule-dot size-2 rounded-full bg-amber-300" />
       </button>
     </div>
