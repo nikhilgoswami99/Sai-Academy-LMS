@@ -4,6 +4,8 @@ import { ArrowUpRight, Check } from "lucide-react";
 import { SiteNav } from "@/components/landing/siteNav";
 import { AcademicPrograms } from "@/components/landing/academic-programs";
 import { AuthDialog } from "@/components/auth/auth-dialog";
+import { CrashCourseScheduleNote } from "@/components/website/crash-course-schedule-note";
+import { CrashCourseScheduleWidget } from "@/components/website/crash-course-schedule-widget";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -71,6 +73,9 @@ export default function Home() {
           <div className="mx-auto max-w-330 px-5 pb-7 pt-10 sm:px-8 lg:px-12"><div className="grid gap-8 border-b border-primary-foreground/15 pb-8 sm:grid-cols-[1fr_auto] sm:items-start"><div className="max-w-sm"><Link href="/" className="brand-wordmark text-xl font-bold tracking-wide">SAI ACADEMY</Link><p className="mt-3 text-sm leading-6 text-primary-foreground/70">Quality education and dedicated guidance for every learner.</p></div><nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-3 text-xs text-primary-foreground/80"><Link className="landing-footer-link" href="/courses">Courses</Link><Link className="landing-footer-link" href="/teachers">Teachers</Link><Link className="landing-footer-link" href="/contact">Contact</Link><AuthDialog trigger={<button type="button" className="landing-footer-link">Login</button>} /></nav></div><div className="flex flex-col gap-2 pt-4 text-[10px] text-primary-foreground/60 sm:flex-row sm:items-center sm:justify-between"><span>© SAI ACADEMY</span><span>Learning, with intention.</span></div></div>
         </footer>
       </main>
+      <CrashCourseScheduleWidget>
+        <CrashCourseScheduleNote compact />
+      </CrashCourseScheduleWidget>
     </>
   );
 }

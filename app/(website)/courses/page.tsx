@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { CrashCourseScheduleNote } from "@/components/website/crash-course-schedule-note";
 
 export default function CoursesPage() {
   return (
@@ -46,6 +47,8 @@ export default function CoursesPage() {
             </div>
           </div>
         </article>
+
+        <CrashCourseScheduleNote />
 
         <section
           aria-labelledby="crash-course-details-title"

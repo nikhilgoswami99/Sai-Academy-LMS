@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { PageContainer, PageHero } from "@/components/website/page-sections";
+import { CrashCourseScheduleNote } from "@/components/website/crash-course-schedule-note";
 import { GiftTokenFees } from "./gift-token-fees";
 
 export default function CoursePage() {
@@ -20,7 +21,10 @@ export default function CoursePage() {
         </Link>
       </PageHero>
       <PageContainer className="pt-8 sm:pt-10 lg:pt-12">
-        <GiftTokenFees />
+        <div className="space-y-8">
+          {/* <CrashCourseScheduleNote /> */}
+          <GiftTokenFees />
+        </div>
       </PageContainer>
     </main>
   );
