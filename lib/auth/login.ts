@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getStudentAuthEmail } from "@/lib/auth/student-auth-migration.mjs";
 
 export type LoginResult =
-  | { success: true; redirectTo: "/admin" | "/student" }
+  | { success: true; redirectTo: "/admin" | "/student" | "/teacher" }
   | { success: false; message: string };
 
 type StudentIdentity = { studentId: string; profileId: string };
@@ -116,6 +116,13 @@ async function signInWithEmail(
       roles?.includes("super_admin")
     ) {
       return { success: true, redirectTo: "/admin" };
+    }
+    if (!profileError && profile?.status === "active" && roles?.includes("teacher")) {
+      const { data: teacher, error: teacherError } = await admin
+        .from("teachers").select("id,status,profile_id").eq("profile_id", user.id).maybeSingle();
+      if (!teacherError && teacher?.profile_id === user.id && teacher.status === "active") {
+        return { success: true, redirectTo: "/teacher" };
+      }
     }
   } catch {
     // Use the same response for missing, inactive, and unrecognized accounts.

@@ -52,7 +52,7 @@ const tokens = [
   },
   {
     id: 3,
-    classes: "X",
+    classes: "X (CBSE)",
     months: 4,
     feePerSubject: 800,
     totalFee: 800 * 4,
@@ -66,7 +66,7 @@ const tokens = [
   },
   {
     id: 4,
-    classes: "IX",
+    classes: "IX (CBSE)",
     months: 5,
     feePerSubject: 800,
     totalFee: 800 * 5,
@@ -910,6 +910,9 @@ export function GiftTokenFees() {
 
       <p className="mt-8 rounded-xl border border-border bg-secondary/60 px-5 py-4 text-center text-sm font-medium leading-6 text-foreground">
         Children’s Day Offer under Gift Token 2 is valid from 12th to 16th November 2026.
+      </p>
+      <p className="mt-2 text-center font-serif text-sm font-bold leading-6 text-red-600" style={{ fontFamily: '"Times New Roman", Times, serif' }}>
+        SAI ACADEMY reserves the right to amend the fees, offers, and related terms at any time.
       </p>
 
       <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
