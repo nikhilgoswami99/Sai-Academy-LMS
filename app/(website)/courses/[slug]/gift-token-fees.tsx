@@ -26,8 +26,8 @@ const tokens = [
     id: 1,
     classes: "XII",
     months: 4,
-    feePerSubject: 1200,
-    totalFee: 1200 * 4,
+    feePerSubject: 1250,
+    totalFee: 1250 * 4,
     discount: 50,
     payment: "One-time payment",
     includes: [
@@ -40,8 +40,8 @@ const tokens = [
     id: 2,
     classes: "XI",
     months: 5,
-    feePerSubject: 1200,
-    totalFee: 1200 * 5,
+    feePerSubject: 1250,
+    totalFee: 1250 * 5,
     discount: 50,
     payment: "One-time payment",
     includes: [
@@ -54,8 +54,8 @@ const tokens = [
     id: 3,
     classes: "X (CBSE)",
     months: 4,
-    feePerSubject: 800,
-    totalFee: 800 * 4,
+    feePerSubject: 900,
+    totalFee: 900 * 4,
     discount: 50,
     payment: "One-time payment",
     includes: [
@@ -68,8 +68,8 @@ const tokens = [
     id: 4,
     classes: "IX (CBSE)",
     months: 5,
-    feePerSubject: 800,
-    totalFee: 800 * 5,
+    feePerSubject: 900,
+    totalFee: 900 * 5,
     discount: 50,
     payment: "One-time payment",
     includes: [
@@ -127,14 +127,14 @@ const formatCurrency = (amount: number) =>
   }).format(amount);
 
 function getDiscountRate(token: GiftToken, subjectCount: number) {
-  if (token.id === 1) return 50;
-  if (token.id === 2) return 50;
+  if (token.id <= 2) return subjectCount === 1 ? 40 : 50;
   if (token.id <= 4) return subjectCount <= 2 ? 40 : 50;
   return token.discount;
 }
 
 function calculateFee(token: GiftToken, subjectCount: number) {
-  const chargeableSubjects = token.id >= 3 ? Math.min(subjectCount, 4) : subjectCount;
+  const chargeableSubjects =
+    token.id >= 5 ? Math.min(subjectCount, 4) : subjectCount;
   const courseFee = chargeableSubjects * token.totalFee;
   const discountRate = getDiscountRate(token, subjectCount);
   const discountAmount = courseFee * (discountRate / 100);
@@ -162,7 +162,7 @@ function GiftTokenDetails({
     subjectCount,
   );
   const chargedSubjectCount =
-    token.id >= 3 ? Math.min(subjectCount, 4) : subjectCount;
+    token.id >= 5 ? Math.min(subjectCount, 4) : subjectCount;
 
   return (
     <DialogContent
@@ -182,7 +182,7 @@ function GiftTokenDetails({
           <div className="relative pr-8">
             <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold tracking-wide text-white/90">
               <Sparkles aria-hidden="true" size={14} />
-              Gift Token 2 • Crash Course
+              Gift Token 3 • Crash Course
             </span>
             <DialogHeader className="mt-4 gap-2 text-left">
               <DialogTitle className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
@@ -214,10 +214,10 @@ function GiftTokenDetails({
                 </span>
                 <span className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-amber-800">
                   <Gift aria-hidden="true" size={14} />
-                  Children’s Day Offer
+                  Success Day Offer · PTM
                 </span>
                 <span className="mt-1 text-[12px] leading-4">
-                  Valid 12th–16th November 2026
+                  Valid 16th–22nd November 2026
                 </span>
               </div>
             </div>
@@ -403,7 +403,7 @@ function EnrollStepDialog({
       {step === 1 ? (
         <>
         <p className="rounded-lg border border-brand-red/20 bg-brand-red/5 px-4 py-3 text-sm font-medium text-brand-red">
-          Inform your friends and get assured gifts.
+          Success Day Offer for PTM (Parent-Teacher Meeting).
         </p>
         <form onSubmit={continueToPayment} className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
@@ -714,7 +714,7 @@ export function GiftTokenFees() {
   return (
     <section aria-labelledby="gift-token-heading">
       <p className="mb-5 w-fit rounded-lg border border-brand-red/20 bg-brand-red/5 px-4 py-3 text-sm font-medium text-brand-red">
-        Inform your friends and get assured gifts.
+        Success Day Offer for PTM (Parent-Teacher Meeting).
       </p>
       <div className="mb-8 max-w-2xl">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brand-red">
@@ -728,15 +728,15 @@ export function GiftTokenFees() {
         </h2>
         <div className="mt-1 flex flex-wrap items-center gap-2.5">
           <h3 className="text-base font-semibold tracking-tight text-brand-red sm:text-lg">
-            Gift Token 2
+            Gift Token 3
           </h3>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-amber-800">
             <Gift aria-hidden="true" size={14} />
-            Children’s Day Offer
+            Success Day Offer · PTM
           </span>
         </div>
         <p className="mt-3 text-sm leading-6 text-muted-foreground sm:text-base">
-          Select a class group to view the Children’s Day offer fee details.
+          Parent-Teacher Meeting offer: choose a class group to view the discounted fees.
         </p>
       </div>
 
@@ -771,11 +771,11 @@ export function GiftTokenFees() {
               </span>
               <span className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-amber-300/70 bg-amber-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-amber-800">
                 <Gift aria-hidden="true" size={14} />
-                Children’s Day Offer
+                Success Day Offer · PTM
               </span>
               <span className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                 <CalendarDays aria-hidden="true" size={13} />
-                12th–16th November 2026
+                16th–22nd November 2026
               </span>
               <span className="mt-3 flex flex-wrap items-start justify-between gap-2">
                 <span className="text-lg font-bold tracking-tight">
@@ -819,6 +819,13 @@ export function GiftTokenFees() {
                   ),
                 )}
               </select>
+              {token.id <= 4 && (
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                  {token.id <= 2
+                    ? "1 subject: 40% off · 2+ subjects: 50% off."
+                    : "2 subjects: 40% off · 3+ subjects: 50% off."}
+                </p>
+              )}
               {token.id >= 3 && subjectCount < 2 && subjectValidationTokenId === token.id && (
                 <p role="alert" className="mt-2 text-sm font-medium text-destructive">
                   Enroll for minimum 2 subjects
@@ -909,7 +916,7 @@ export function GiftTokenFees() {
       </div>
 
       <p className="mt-8 rounded-xl border border-border bg-secondary/60 px-5 py-4 text-center text-sm font-medium leading-6 text-foreground">
-        Children’s Day Offer under Gift Token 2 is valid from 12th to 16th November 2026.
+        Success Day Offer (PTM – Parent-Teacher Meeting) under Gift Token 3 is valid from 16th to 22nd November 2026.
       </p>
       <p className="mt-2 text-center font-serif text-sm font-bold leading-6 text-red-600" style={{ fontFamily: '"Times New Roman", Times, serif' }}>
         SAI ACADEMY reserves the right to amend the fees, offers, and related terms at any time.
@@ -958,7 +965,7 @@ export function GiftTokenFees() {
             </h2>
             <p className="mt-3 text-sm leading-6 sm:text-base">
               You have successfully enrolled for the crash course. You will get
-              your login credentials after 12th of November. We will message you
+              your login credentials after your enrollment is processed. We will message you
               about the payment confirmation within 24 hours.
             </p>
             <p

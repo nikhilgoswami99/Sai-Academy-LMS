@@ -1,5 +1,5 @@
+import Image from "next/image";
 import {
-  ArrowUpRight,
   BookOpenText,
   BriefcaseBusiness,
   GraduationCap,
@@ -15,7 +15,8 @@ const teacherCards = [
   {
     id: "teacher-one",
     name: "SACHIN KUMAR",
-    photoLabel: "Photo of teacher 1",
+    photo: "/teachers/SACHIN%20KUMAR.png",
+    photoLabel: "Photo of Sachin Kumar",
     qualification: "Add qualification",
     experience: "Add teaching experience",
     subject: "Add subject taught",
@@ -138,18 +139,32 @@ export default function TeachersPage() {
                     className="absolute -bottom-16 -left-8 size-44 rounded-full border border-primary/10 transition-transform duration-500 group-hover:scale-110 motion-reduce:transition-none"
                   />
                   <div
-                    role="img"
-                    aria-label={teacher.photoLabel}
-                    className="relative flex size-28 items-center justify-center rounded-full border-4 border-card/80 bg-card/80 text-primary shadow-lg backdrop-blur-sm transition duration-300 group-hover:scale-105 group-hover:shadow-xl motion-reduce:transform-none motion-reduce:transition-none sm:size-32"
+                    role={teacher.photo ? undefined : "img"}
+                    aria-label={teacher.photo ? undefined : teacher.photoLabel}
+                    className="relative size-56 overflow-hidden rounded-full border-4 border-card/80 bg-card/80 text-primary shadow-lg backdrop-blur-sm transition duration-300 group-hover:scale-[1.03] group-hover:shadow-xl motion-reduce:transform-none motion-reduce:transition-none sm:size-64"
                   >
-                    <UserRound
-                      aria-hidden="true"
-                      className="size-12 stroke-[1.4] sm:size-14"
-                    />
+                    {teacher.photo ? (
+                      <Image
+                        src={teacher.photo}
+                        alt={teacher.photoLabel}
+                        fill
+                        sizes="(min-width: 640px) 256px, 224px"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <span className="flex size-full items-center justify-center">
+                        <UserRound
+                          aria-hidden="true"
+                          className="size-12 stroke-[1.4] sm:size-14"
+                        />
+                      </span>
+                    )}
                   </div>
-                  <span className="absolute bottom-4 left-4 rounded-full border border-border/60 bg-card/85 px-3 py-1 text-[11px] font-medium text-muted-foreground backdrop-blur-sm">
-                    Photo placeholder
-                  </span>
+                  {!teacher.photo && (
+                    <span className="absolute bottom-4 left-4 rounded-full border border-border/60 bg-card/85 px-3 py-1 text-[11px] font-medium text-muted-foreground backdrop-blur-sm">
+                      Photo placeholder
+                    </span>
+                  )}
                 </div>
 
                 <div className="p-5 sm:p-6">
@@ -162,12 +177,6 @@ export default function TeachersPage() {
                         {teacher.name}
                       </h3>
                     </div>
-                    <span
-                      aria-hidden="true"
-                      className="flex size-9 shrink-0 items-center justify-center rounded-full bg-secondary text-primary transition duration-200 group-hover:bg-brand-blue group-hover:text-white"
-                    >
-                      <ArrowUpRight className="size-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                    </span>
                   </div>
 
                   <dl className="mt-5 space-y-3 border-t border-border/70 pt-4">
