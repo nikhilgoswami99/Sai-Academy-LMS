@@ -134,7 +134,9 @@ function getDiscountRate(token: GiftToken, subjectCount: number) {
 
 function calculateFee(token: GiftToken, subjectCount: number) {
   const chargeableSubjects =
-    token.id >= 5 ? Math.min(subjectCount, 4) : subjectCount;
+    token.id >= 3 && token.id <= 5
+      ? Math.min(subjectCount, 4)
+      : subjectCount;
   const courseFee = chargeableSubjects * token.totalFee;
   const discountRate = getDiscountRate(token, subjectCount);
   const discountAmount = courseFee * (discountRate / 100);
@@ -162,7 +164,9 @@ function GiftTokenDetails({
     subjectCount,
   );
   const chargedSubjectCount =
-    token.id >= 5 ? Math.min(subjectCount, 4) : subjectCount;
+    token.id >= 3 && token.id <= 5
+      ? Math.min(subjectCount, 4)
+      : subjectCount;
 
   return (
     <DialogContent
